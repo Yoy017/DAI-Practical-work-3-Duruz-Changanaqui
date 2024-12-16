@@ -15,10 +15,17 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/io.javalin/javalin-bundle -->
+        <!-- https://mvnrepository.com/artifact/gg.jte/jte -->
+        <dependency>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte</artifactId>
+            <version>3.1.15</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.javalin/javalin -->
         <dependency>
             <groupId>io.javalin</groupId>
-            <artifactId>javalin-bundle</artifactId>
+            <artifactId>javalin</artifactId>
             <version>6.3.0</version>
         </dependency>
     </dependencies>
