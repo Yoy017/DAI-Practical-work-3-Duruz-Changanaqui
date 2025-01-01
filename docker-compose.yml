@@ -1,4 +1,4 @@
-#version: '3.8' (obsolète)
+version: '3.8'
 networks:
   bdr-net:
     driver: bridge
