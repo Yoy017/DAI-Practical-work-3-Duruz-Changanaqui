@@ -4,7 +4,7 @@ import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import ch.heigvd.dai.database.repository.PlayerRepository;
 import ch.heigvd.dai.database.service.CharacterService;
 
-public class Main {
+public class DatabaseTest {
     public static void main(String[] args) {
         String url = "jdbc:postgresql://localhost:5432/";
         String user = "bdr";
