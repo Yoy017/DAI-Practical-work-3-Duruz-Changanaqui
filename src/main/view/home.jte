@@ -6,7 +6,7 @@
     <title>BDR x DAI</title>
 </head>
 <body>
-<h1>MMO GAME Project telsjtlstej</h1>
+<h1>MMO GAME Project</h1>
 <p>Welcome to this first template of the MMO GAME Project application.</p>
 <p>Click here to start</p>
 <button>Play</button>

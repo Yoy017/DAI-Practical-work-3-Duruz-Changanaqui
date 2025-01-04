@@ -2,9 +2,12 @@ package ch.heigvd.dai;
 
 import io.javalin.Javalin;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class App {
     public static final int PORT = 8080;
-    public static final String HOME = "./src/main/view/home.jte";
+    public static final String HOME = "src/main/view/home.jte";
 
     public static void main(String[] args) {
         // Create the Javalin app
@@ -17,7 +20,8 @@ public class App {
 
         // Display the home page
         app.get("/home", ctx -> {
-            ctx.html(HOME);
+            String htmlContent = new String(Files.readAllBytes(Paths.get(HOME)));
+            ctx.html(htmlContent);
         });
 
         // Start the app
