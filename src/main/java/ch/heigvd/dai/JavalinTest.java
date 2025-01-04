@@ -26,29 +26,5 @@ public class JavalinTest {
 
         // Start the app
         app.start(PORT);
-
-//        Javalin app = Javalin.create();
-//        AtomicReference<String> htmlContent = new AtomicReference<>();
-//
-//        // Redirect to the home page (default)
-//        app.get("/", ctx -> {
-//            ctx.redirect("/home");
-//        });
-//
-//        // Display the home page
-//        app.get("/home", ctx -> {
-//            htmlContent.set(new String(Files.readAllBytes(Paths.get("src/main/view/home.jte"))));
-//            ctx.html(htmlContent.get());
-//        });
-//
-//        // Display the login page
-//        app.get("/login", ctx -> {
-//            htmlContent.set(new String(Files.readAllBytes(Paths.get("src/main/view/login.html"))));
-//            ctx.html(htmlContent.get());
-//        });
-//
-//        // Display the inventory
-//
-//        app.start(PORT);
     }
 }
