@@ -5,7 +5,7 @@ import io.javalin.Javalin;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class App {
+public class JavalinTest {
     public static final int PORT = 8080;
     public static final String HOME = "src/main/view/home.jte";
 
