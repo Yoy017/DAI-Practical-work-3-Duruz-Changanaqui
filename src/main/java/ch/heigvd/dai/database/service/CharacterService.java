@@ -2,10 +2,10 @@ package ch.heigvd.dai.database.service;
 
 import ch.heigvd.dai.database.repository.PlayerRepository;
 
-public class PlayerService {
+public class CharacterService {
     private final PlayerRepository playerRepository;
 
-    public PlayerService(PlayerRepository playerRepository) {
+    public CharacterService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
     }
 

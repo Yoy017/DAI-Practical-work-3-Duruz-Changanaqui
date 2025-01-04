@@ -2,7 +2,7 @@ package ch.heigvd.dai;
 
 import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import ch.heigvd.dai.database.repository.PlayerRepository;
-import ch.heigvd.dai.database.service.PlayerService;
+import ch.heigvd.dai.database.service.CharacterService;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,7 +15,7 @@ public class Main {
 
         // Initialisation des services
         PlayerRepository playerRepository = new PlayerRepository(postgresDatabaseConnection);
-        PlayerService playerService = new PlayerService(playerRepository);
+        CharacterService playerService = new CharacterService(playerRepository);
 
         // Affichage des joueurs
         playerService.showPlayers();
