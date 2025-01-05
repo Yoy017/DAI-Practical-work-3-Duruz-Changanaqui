@@ -8,6 +8,7 @@
 <body>
 <h1>MMO GAME Project</h1>
 <p>Welcome to this first template of the MMO GAME Project application.</p>
+<p>You have entered at time ${System.currentTimeMillis()} ms</p>
 <p>Click here to start</p>
 <button>Play</button>
 </body>
