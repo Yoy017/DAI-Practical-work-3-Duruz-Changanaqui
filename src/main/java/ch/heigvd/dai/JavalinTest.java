@@ -1,17 +1,27 @@
 package ch.heigvd.dai;
 
+import gg.jte.ContentType;
+import gg.jte.TemplateEngine;
+import gg.jte.resolve.DirectoryCodeResolver;
 import io.javalin.Javalin;
+import io.javalin.rendering.template.JavalinJte;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class JavalinTest {
     public static final int PORT = 8080;
-    public static final String HOME = "src/main/view/home.jte";
+    public static final String HOME = "home.jte";
 
     public static void main(String[] args) {
+        DirectoryCodeResolver codeResolver = new DirectoryCodeResolver(Path.of("src/main/resources/view/"));
+        TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
+
         // Create the Javalin app
-        Javalin app = Javalin.create();
+        Javalin app = Javalin.create(config -> {
+            config.fileRenderer(new JavalinJte(templateEngine));
+        });
 
         // Redirect to the home page (default)
         app.get("/", ctx -> {
@@ -20,8 +30,7 @@ public class JavalinTest {
 
         // Display the home page
         app.get("/home", ctx -> {
-            String htmlContent = new String(Files.readAllBytes(Paths.get(HOME)));
-            ctx.html(htmlContent);
+            ctx.render(HOME);
         });
 
         // Start the app
