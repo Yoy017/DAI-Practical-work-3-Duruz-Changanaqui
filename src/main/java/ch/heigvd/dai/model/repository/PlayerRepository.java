@@ -18,8 +18,8 @@ public class PlayerRepository {
         this.databaseProvider = databaseProvider;
     }
 
-    public List<Player> findAll() {
-        List<Player> players = new ArrayList<>();
+    public LinkedList<Player> findAll() {
+        LinkedList<Player> players = new LinkedList<>();
         String sql = "SELECT * FROM joueur";
 
         try (Connection conn = databaseProvider.getConnection();

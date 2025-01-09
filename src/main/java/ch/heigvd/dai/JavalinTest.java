@@ -18,10 +18,6 @@ public class JavalinTest {
     public static final int PORT = 8080;
     public static final String HOME = "home.jte";
 
-    public JavalinTest() {
-
-    }
-
     public static void main(String[] args) {
         DirectoryCodeResolver codeResolver = new DirectoryCodeResolver(Path.of("src/main/resources/view/"));
         TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);

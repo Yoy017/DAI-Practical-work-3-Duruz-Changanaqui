@@ -2,6 +2,8 @@ package ch.heigvd.dai.model.service;
 
 import ch.heigvd.dai.model.entity.Player;
 import ch.heigvd.dai.model.repository.PlayerRepository;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public class PlayerService {
@@ -11,7 +13,7 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
-    public List<Player> getAllPlayers() {
+    public LinkedList<Player> getAllPlayers() {
         return playerRepository.findAll();
     }
 

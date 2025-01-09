@@ -1,8 +1,6 @@
-@import ch.heigvd.dai.JavalinTest
 @import ch.heigvd.dai.model.entity.Player
 @import java.util.LinkedList
 
-@param int port
 @param LinkedList<Player> players
 
 <!DOCTYPE html>
@@ -16,7 +14,6 @@
 <h1>MMO GAME Project</h1>
 <p>Welcome to this first template of the MMO GAME Project application.</p>
 <p>Here is the current ranking for all Players registered.</p>
-<p>Variables test: ${System.currentTimeMillis()} My Interger param ${port}</p>
 <table>
     <tr>
         <th>Name</th>

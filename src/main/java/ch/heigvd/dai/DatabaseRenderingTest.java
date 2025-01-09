@@ -11,6 +11,7 @@ import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 public class DatabaseRenderingTest {
     public static void main(String[] args) {

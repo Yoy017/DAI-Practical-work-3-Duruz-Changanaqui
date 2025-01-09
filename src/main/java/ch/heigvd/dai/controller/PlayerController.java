@@ -4,6 +4,7 @@ import ch.heigvd.dai.model.entity.Player;
 import ch.heigvd.dai.model.service.PlayerService;
 import io.javalin.http.Context;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,12 +17,8 @@ public class PlayerController {
 
     // Afficher tous les joueurs
     public void getAllPlayers(Context ctx) {
-        try {
-            List<Player> players = playerService.getAllPlayers();
-            ctx.render("home.jte", Map.of("players", players));
-        } catch (Exception e) {
-            ctx.status(500).result("Internal Server Error: " + e.getMessage());
-        }
+        LinkedList<Player> players = playerService.getAllPlayers();
+        ctx.render("home.jte", Map.of("players", players));
     }
 
     // Afficher un joueur par ID
