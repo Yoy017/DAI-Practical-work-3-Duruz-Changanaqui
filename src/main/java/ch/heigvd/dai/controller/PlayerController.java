@@ -14,14 +14,24 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
+    // Afficher tous les joueurs
     public void getAllPlayers(Context ctx) {
-        List<Player> players = playerService.getAllPlayers();
-        ctx.render("home.jte?", Map.of("players", players));
+        try {
+            List<Player> players = playerService.getAllPlayers();
+            ctx.render("home.jte", Map.of("players", players));
+        } catch (Exception e) {
+            ctx.status(500).result("Internal Server Error: " + e.getMessage());
+        }
     }
 
+    // Afficher un joueur par ID
     public void getPlayerById(Context ctx) {
         int id = Integer.parseInt(ctx.pathParam("id"));
         Player player = playerService.getPlayerById(id);
-        ctx.render("player.jte", Map.of("player", player));
+        if (player != null) {
+            ctx.render("player_details.jte", Map.of("player", player)); // Affichage dans un fichier de détails par exemple
+        } else {
+            ctx.status(404).result("Player not found");
+        }
     }
 }

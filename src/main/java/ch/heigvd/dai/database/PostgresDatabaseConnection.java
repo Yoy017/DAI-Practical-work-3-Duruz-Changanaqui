@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class PostgresDatabaseConnection implements DatabaseProvider {
-    private final String url, user, pwd;
+    private final String url;
+    private final String user;
+    private final String pwd;
 
     public PostgresDatabaseConnection(String url, String user, String pwd) {
         this.url = url;
@@ -14,6 +16,7 @@ public class PostgresDatabaseConnection implements DatabaseProvider {
         this.pwd = pwd;
     }
 
+    @Override
     public Connection getConnection() throws SQLException {
         Connection conn = DriverManager.getConnection(url, user, pwd);
         try (Statement stmt = conn.createStatement()) {
