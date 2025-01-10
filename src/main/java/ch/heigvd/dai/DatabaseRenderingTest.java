@@ -41,7 +41,6 @@ public class DatabaseRenderingTest {
         // Enregistrer les routes
         app.get("/home", homeController::getAllPlayers);
         app.get("/armory", armoryController::getInventoryFromPlayer);
-        //app.get("/armory?name=" + name, armoryController::getInventoryFromPlayer);
 
         // Démarrer l'application
         app.start(8080);
