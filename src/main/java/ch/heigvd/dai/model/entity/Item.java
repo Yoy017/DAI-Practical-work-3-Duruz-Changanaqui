@@ -68,4 +68,8 @@ enum ItemType {
                 return ItemType.OTHER;
         }
     }
+
+    public boolean equals(ItemType type) {
+        return this == type;
+    }
 }

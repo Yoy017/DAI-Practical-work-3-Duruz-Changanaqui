@@ -22,18 +22,3 @@ public class Slot {
         return item;
     }
 }
-
-enum SlotType {
-    BAG, EQUIPMENT;
-
-    protected static SlotType getTypeFromString(String type) {
-        switch (type) {
-            case "Sac":
-                return SlotType.BAG;
-            case "Equipement":
-                return SlotType.EQUIPMENT;
-            default:
-                return SlotType.BAG;
-        }
-    }
-}
