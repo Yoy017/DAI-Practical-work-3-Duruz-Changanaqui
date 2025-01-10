@@ -1,17 +1,16 @@
 package ch.heigvd.dai.controller;
 
 import ch.heigvd.dai.model.entity.Player;
-import ch.heigvd.dai.model.service.PlayerService;
+import ch.heigvd.dai.model.service.HomeService;
 import io.javalin.http.Context;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
-public class PlayerController {
-    private final PlayerService playerService;
+public class HomeController {
+    private final HomeService playerService;
 
-    public PlayerController(PlayerService playerService) {
+    public HomeController(HomeService playerService) {
         this.playerService = playerService;
     }
 

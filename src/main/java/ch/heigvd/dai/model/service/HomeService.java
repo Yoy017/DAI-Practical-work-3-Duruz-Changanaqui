@@ -1,15 +1,14 @@
 package ch.heigvd.dai.model.service;
 
 import ch.heigvd.dai.model.entity.Player;
-import ch.heigvd.dai.model.repository.PlayerRepository;
+import ch.heigvd.dai.model.repository.HomeRepository;
 
 import java.util.LinkedList;
-import java.util.List;
 
-public class PlayerService {
-    private final PlayerRepository playerRepository;
+public class HomeService {
+    private final HomeRepository playerRepository;
 
-    public PlayerService(PlayerRepository playerRepository) {
+    public HomeService(HomeRepository playerRepository) {
         this.playerRepository = playerRepository;
     }
 

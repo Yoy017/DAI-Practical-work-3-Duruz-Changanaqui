@@ -1,8 +1,11 @@
 package ch.heigvd.dai;
 
-import ch.heigvd.dai.controller.PlayerController;
-import ch.heigvd.dai.model.service.PlayerService;
-import ch.heigvd.dai.model.repository.PlayerRepository;
+import ch.heigvd.dai.controller.ArmoryController;
+import ch.heigvd.dai.controller.HomeController;
+import ch.heigvd.dai.model.repository.ArmoryRepository;
+import ch.heigvd.dai.model.service.ArmoryService;
+import ch.heigvd.dai.model.service.HomeService;
+import ch.heigvd.dai.model.repository.HomeRepository;
 import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
@@ -11,9 +14,10 @@ import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 
 import java.nio.file.Path;
-import java.util.Map;
 
 public class DatabaseRenderingTest {
+    private static final String name = "Darkphoenix";
+
     public static void main(String[] args) {
         DirectoryCodeResolver codeResolver = new DirectoryCodeResolver(Path.of("src/main/resources/view/"));
         TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
@@ -27,24 +31,17 @@ public class DatabaseRenderingTest {
         PostgresDatabaseConnection conn = new PostgresDatabaseConnection("jdbc:postgresql://localhost:5432/", "bdr", "bdr");
 
         // Initialisation des repository, services et contrôleurs
-        PlayerController playerController = new PlayerController(new PlayerService(new PlayerRepository(conn)));
-
-//        app.get("/", ctx -> {
-//            ctx.redirect("/home");
-//        });
-//
-//        // Afficher la page d'accueil avec les joueurs
-//        app.get("/home", ctx -> {
-//            playerController.getAllPlayers(ctx);
-//        });
+        HomeController homeController = new HomeController(new HomeService(new HomeRepository(conn)));
+        ArmoryController armoryController = new ArmoryController(new ArmoryService(new ArmoryRepository(conn)));
 
         app.get("/", ctx -> {
-            ctx.redirect("/players");
+            ctx.redirect("/home");
         });
 
         // Enregistrer les routes
-        app.get("/players", playerController::getAllPlayers);
-        //app.get("/players/:id", playerController::getPlayerById);
+        app.get("/home", homeController::getAllPlayers);
+        app.get("/armory", armoryController::getInventoryFromPlayer);
+        //app.get("/armory?name=" + name, armoryController::getInventoryFromPlayer);
 
         // Démarrer l'application
         app.start(8080);
