@@ -13,7 +13,6 @@ import java.sql.SQLException;
 
 public class ArmoryRepository {
     private final PostgresDatabaseConnection databaseProvider;
-    private final String PAGE = "armory.jte";
 
     public ArmoryRepository(PostgresDatabaseConnection databaseProvider) {
         this.databaseProvider = databaseProvider;

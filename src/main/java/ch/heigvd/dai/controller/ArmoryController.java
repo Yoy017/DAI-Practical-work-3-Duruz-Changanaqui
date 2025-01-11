@@ -1,19 +1,22 @@
 package ch.heigvd.dai.controller;
 
+import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import ch.heigvd.dai.model.entity.Inventory;
-import ch.heigvd.dai.model.entity.Item;
-import ch.heigvd.dai.model.service.ArmoryService;
+import ch.heigvd.dai.model.repository.ArmoryRepository;
+import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import java.util.LinkedList;
 import java.util.Map;
 
 public class ArmoryController {
-    private final ArmoryService armoryService;
-    private final String PAGE = "armory.jte";
+    private final ArmoryRepository armoryRepository;
+    private final String PAGE = "armory.jte", URL = "/armory";
 
-    public ArmoryController(ArmoryService armoryService) {
-        this.armoryService = armoryService;
+    public ArmoryController(Javalin app, PostgresDatabaseConnection databaseProvider) {
+        this.armoryRepository = new ArmoryRepository(databaseProvider);
+        app.get(URL, this::getInventoryFromPlayer);
+        app.get( URL + "?name=:name", this::getInventoryFromPlayer);
     }
 
     public void getInventoryFromPlayer(Context ctx) {
@@ -23,7 +26,7 @@ public class ArmoryController {
             return;
         }
 
-        Inventory inventory = armoryService.getInventoryFromPlayer(name);
+        Inventory inventory =  armoryRepository.getInventoryFromPlayer(name);
         if (inventory == null) {
             ctx.status(404).result("Inventory not found for player: " + name);
             return;

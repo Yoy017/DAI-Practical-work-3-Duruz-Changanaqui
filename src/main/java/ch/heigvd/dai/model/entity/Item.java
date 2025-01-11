@@ -2,32 +2,34 @@ package ch.heigvd.dai.model.entity;
 
 public class Item {
     protected final String name, description;
+    protected int quantity;
     protected final ItemType type;
     protected Rarity rarity;
     protected final double levelRequired;
 
-    public Item(String name, String type, String rarity) {
+    public Item(String name, String description, int quantity, String type, String rarity, double levelRequired) {
         this.name = name;
-        this.description = null;
+        this.description = description;
+        this.quantity = quantity;
         this.type = ItemType.getTypeFromString(type);
         this.rarity = new Rarity(rarity);
-        this.levelRequired = 0.;
+        this.levelRequired = levelRequired;
+    }
+
+    public Item(String name, String type, String rarity) {
+        this(name, null, 1, type, rarity, 0);
     }
 
     public Item(String name, String type, String rarity, double levelRequired) {
-        this.name = name;
-        this.description = null;
-        this.type = ItemType.getTypeFromString(type);
-        this.rarity = new Rarity(rarity);
-        this.levelRequired = levelRequired;
+        this(name, null, 1, type, rarity, levelRequired);
     }
 
     public Item(String name, String description, String type, String rarity, double levelRequired) {
-        this.name = name;
-        this.description = description;
-        this.type = ItemType.getTypeFromString(type);
-        this.rarity = new Rarity(rarity);
-        this.levelRequired = levelRequired;
+        this(name, description, 1, type, rarity, levelRequired);
+    }
+
+    public Item(String name, String description, String type, String rarity) {
+        this(name, description, 1, type, rarity, 0);
     }
 
     public String getName() {
@@ -48,6 +50,18 @@ public class Item {
 
     public double getLevelRequired() {
         return levelRequired;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+
+        if (this.quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative");
+        }
     }
 }
 

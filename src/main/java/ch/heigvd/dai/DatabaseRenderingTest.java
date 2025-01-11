@@ -2,8 +2,8 @@ package ch.heigvd.dai;
 
 import ch.heigvd.dai.controller.ArmoryController;
 import ch.heigvd.dai.controller.HomeController;
-import ch.heigvd.dai.model.repository.ArmoryRepository;
-import ch.heigvd.dai.model.service.ArmoryService;
+import ch.heigvd.dai.controller.ItemsController;
+import ch.heigvd.dai.model.repository.ItemsRepository;
 import ch.heigvd.dai.model.service.HomeService;
 import ch.heigvd.dai.model.repository.HomeRepository;
 import ch.heigvd.dai.database.PostgresDatabaseConnection;
@@ -32,15 +32,13 @@ public class DatabaseRenderingTest {
 
         // Initialisation des repository, services et contrôleurs
         HomeController homeController = new HomeController(new HomeService(new HomeRepository(conn)));
-        ArmoryController armoryController = new ArmoryController(new ArmoryService(new ArmoryRepository(conn)));
+        ArmoryController armoryController = new ArmoryController(app, conn);
+        ItemsController itemsController = new ItemsController(app, conn);
 
-        app.get("/", ctx -> {
-            ctx.redirect("/home");
-        });
+        app.get("/", ctx ->  ctx.redirect("/home") );
 
         // Enregistrer les routes
         app.get("/home", homeController::getAllPlayers);
-        app.get("/armory", armoryController::getInventoryFromPlayer);
 
         // Démarrer l'application
         app.start(8080);
