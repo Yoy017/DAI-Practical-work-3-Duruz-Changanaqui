@@ -3,7 +3,6 @@ package ch.heigvd.dai.model.repository;
 import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import ch.heigvd.dai.model.entity.Inventory;
 import ch.heigvd.dai.model.entity.Item;
-import ch.heigvd.dai.model.entity.Player;
 import ch.heigvd.dai.model.entity.Slot;
 
 import java.sql.Connection;
@@ -36,12 +35,12 @@ public class ArmoryRepository {
                     inventory.addSlot(
                             new Slot(rs.getString("nom_type"),
                             new Item(
+                                    rs.getInt("id"),
                                     rs.getString("nom"),
                                     rs.getString("description"),
                                     rs.getString("nom_type"),
                                     rs.getString("nom_rarete"),
-                                    rs.getDouble("niveaurequis")
-                            ))
+                                    rs.getDouble("niveaurequis")))
                     );
                 }
             }

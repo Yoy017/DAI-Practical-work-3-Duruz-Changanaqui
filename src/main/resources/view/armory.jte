@@ -67,7 +67,7 @@
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0">
                 <div class="card-body d-flex justify-content-center align-items-center" style="height: 100%;">
-                    <a href="/items?name=${"Darkphoenix"}" class="btn btn-outline-primary">Add New Item</a>
+                    <a href="/items" class="btn btn-outline-primary">Add New Item</a>
                 </div>
             </div>
         </div>

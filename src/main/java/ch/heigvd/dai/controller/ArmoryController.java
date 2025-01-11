@@ -15,20 +15,30 @@ public class ArmoryController {
 
     public ArmoryController(Javalin app, PostgresDatabaseConnection databaseProvider) {
         this.armoryRepository = new ArmoryRepository(databaseProvider);
-        app.get(URL, this::getInventoryFromPlayer);
-        app.get( URL + "?name=:name", this::getInventoryFromPlayer);
+        app.get(URL, ctx -> {
+            String cookie = ctx.cookie("player");
+            String newName = ctx.queryParam("name");
+
+            if (newName != null && newName != cookie) {
+                System.out.println("Setting new cookie for player: " + newName);
+                ctx.cookie("player", newName, 3600);
+            }
+
+            // If no new name provided, fall back to existing cookie
+            getInventoryFromPlayer(ctx);
+        });
     }
 
     public void getInventoryFromPlayer(Context ctx) {
-        String name = ctx.queryParam("name");
-        if (name == null || name.isEmpty()) {
+        String player = ctx.cookie("player");
+        if (player == null) {
             ctx.status(400).result("Player name is required");
             return;
         }
 
-        Inventory inventory =  armoryRepository.getInventoryFromPlayer(name);
+        Inventory inventory =  armoryRepository.getInventoryFromPlayer(player);
         if (inventory == null) {
-            ctx.status(404).result("Inventory not found for player: " + name);
+            ctx.status(404).result("Inventory not found for player: " + player);
             return;
         }
 

@@ -41,7 +41,10 @@
                                 ${item.getRarity().toString()}
                             </span>
                         </p>
-                        <a href="#" class="btn btn-outline-primary">+</a>
+                        <form method="post" action="/items">
+                            <input type="hidden" name="itemId" value="${item.getId()}">
+                            <button type="submit" class="btn btn-outline-primary">+</button>
+                        </form>
                     </div>
                 </div>
             </div>
