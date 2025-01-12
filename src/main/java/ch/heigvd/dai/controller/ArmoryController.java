@@ -36,12 +36,25 @@ public class ArmoryController {
 //            getInventoryFromPlayer(ctx);
 //        });
 
-        app.delete(URL, ctx -> {
-            String itemName = ctx.formParam("itemName");
-            int itemId = armoryRepository.getIdFromObjectName(itemName);
-            deleteItemFromInventory(ctx, itemId);
+        app.post("/armory", ctx -> {
+            String method = ctx.formParam("_method");
+
+            if ("delete".equalsIgnoreCase(method)) {
+                String itemName = ctx.formParam("itemName");
+                System.out.println("Here in delete method with itemName " + itemName);
+                int itemId = armoryRepository.getIdFromObjectName(itemName);
+                deleteItemFromInventory(ctx, itemId);
+            }
             getInventoryFromPlayer(ctx);
         });
+
+//        app.delete(URL, ctx -> {
+//            String itemName = ctx.formParam("itemName");
+//            System.out.println("Here in delete method with itemName " + itemName);
+//            int itemId = armoryRepository.getIdFromObjectName(itemName);
+//            deleteItemFromInventory(ctx, itemId);
+//            getInventoryFromPlayer(ctx);
+//        });
     }
 
     public void getInventoryFromPlayer(Context ctx) {

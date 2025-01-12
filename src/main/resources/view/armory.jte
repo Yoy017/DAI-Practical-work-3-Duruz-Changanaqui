@@ -22,6 +22,7 @@
     <div class="row">
 
         <!-- Display all items in the inventory -->
+        @if (inventory.getSlots() != null)
         @for (Slot slot : inventory.getSlots())
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm border-0">
@@ -36,15 +37,19 @@
                                     <i class="bi bi-three-dots"></i>
                                 </button>
                                 <ul class="dropdown-menu">
+<%--                                    <li>--%>
+<%--                                        <form action="/armory" method="put">--%>
+<%--                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">--%>
+<%--                                            <button type="submit" class="dropdown-item">Update</button>--%>
+<%--                                        </form>--%>
+<%--                                    </li>--%>
                                     <li>
-                                        <form action="/armory" method="put">
-                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">
-                                            <!-- Add other fields if needed -->
-                                            <button type="submit" class="dropdown-item">Update</button>
-                                        </form>
-                                    </li>
-                                    <li>
-                                        <form action="/armory" method="delete">
+<%--                                        <form action="/armory" method="delete">--%>
+<%--                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">--%>
+<%--                                            <button type="submit" class="dropdown-item text-danger">Delete</button>--%>
+<%--                                        </form>--%>
+                                        <form action="/armory" method="post">
+                                            <input type="hidden" name="_method" value="delete">
                                             <input type="hidden" name="itemName" value="${slot.getItem().getName()}">
                                             <button type="submit" class="dropdown-item text-danger">Delete</button>
                                         </form>
@@ -70,11 +75,13 @@
                 </div>
             </div>
         @endfor
+        @endif
     </div>
     <div>
-        <a href="/items" class="btn btn-primary">Add new item</a>
+        <a href="/items" class="btn btn-primary"><i class="bi bi-plus"></i></a>
     </div>
 </div>
+<a href="/home" class="btn btn-link">Back to home</a>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
