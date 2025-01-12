@@ -2,12 +2,10 @@ package ch.heigvd.dai.controller;
 
 import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import ch.heigvd.dai.model.entity.Inventory;
-import ch.heigvd.dai.model.entity.Item;
 import ch.heigvd.dai.model.repository.ArmoryRepository;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import java.util.LinkedList;
 import java.util.Map;
 
 public class ArmoryController {
@@ -18,81 +16,42 @@ public class ArmoryController {
         this.armoryRepository = new ArmoryRepository(databaseProvider);
 
         app.get(URL, ctx -> {
-            String cookie = ctx.cookie("player");
-            String newName = ctx.queryParam("name");
-
-            // Set new cookie
-            if (newName != null && newName != cookie) {
-                System.out.println("Setting new cookie for player: " + newName);
-                ctx.cookie("player", newName, 3600);
+            String playerName = ctx.queryParam("player");
+            if (playerName != null) {
+                ctx.cookie("player", playerName, 24 * 60 * 60);
+            } else {
+                playerName = ctx.cookie("player");
             }
 
-            getInventoryFromPlayer(ctx);
-        });
+            if (playerName == null || playerName.isEmpty()) {
+                ctx.status(400).result("Player name is required");
+                return;
+            }
 
-//        app.put(URL, ctx -> {
-//            String itemName = ctx.formParam("itemName");
-//            updateItemInInventory(ctx, itemName);
-//            getInventoryFromPlayer(ctx);
-//        });
+            getInventoryFromPlayer(ctx, playerName);
+        });
 
         app.post("/armory", ctx -> {
             String method = ctx.formParam("_method");
 
             if ("delete".equalsIgnoreCase(method)) {
                 String itemName = ctx.formParam("itemName");
-                System.out.println("Here in delete method with itemName " + itemName);
                 int itemId = armoryRepository.getIdFromObjectName(itemName);
                 deleteItemFromInventory(ctx, itemId);
             }
-            getInventoryFromPlayer(ctx);
+            getInventoryFromPlayer(ctx, ctx.cookie("player"));
         });
-
-//        app.delete(URL, ctx -> {
-//            String itemName = ctx.formParam("itemName");
-//            System.out.println("Here in delete method with itemName " + itemName);
-//            int itemId = armoryRepository.getIdFromObjectName(itemName);
-//            deleteItemFromInventory(ctx, itemId);
-//            getInventoryFromPlayer(ctx);
-//        });
     }
 
-    public void getInventoryFromPlayer(Context ctx) {
-        String player = ctx.cookie("player");
-        if (player == null) {
-            ctx.status(400).result("Player name is required");
-            return;
-        }
-
-        Inventory inventory =  armoryRepository.getInventoryFromPlayer(player);
+    public void getInventoryFromPlayer(Context ctx, String playerName) {
+        Inventory inventory = armoryRepository.getInventoryFromPlayer(playerName);
         if (inventory == null) {
-            ctx.status(404).result("Inventory not found for player: " + player);
+            ctx.status(404).result("Inventory not found for player: " + playerName);
             return;
         }
 
-        ctx.render(PAGE, Map.of("inventory", inventory));
+        ctx.render(PAGE, Map.of("inventory", inventory, "playerName", playerName));
     }
-
-    // NOT SUPPOSED TO BE IMPLEMENTED HERE, CAUSE ITEMS IN GAMES ARE TO BE UPDATE BY ADMIN
-//    public void updateItemInInventory(Context ctx, String itemName) {
-//        String player = ctx.cookie("player");
-//        if (player == null) {
-//            ctx.status(400).result("Player name is required");
-//            return;
-//        }
-//
-//        if (itemName == null) {
-//            ctx.status(400).result("Item name is required");
-//            return;
-//        }
-//
-//        if (!armoryRepository.updateInventoryFromPlayer(itemName, player)) {
-//            ctx.status(400).result("Failed to update inventory for player: " + player);
-//            return;
-//        }
-//
-//        getInventoryFromPlayer(ctx);
-//    }
 
     public void deleteItemFromInventory(Context ctx, int itemId) {
         String player = ctx.cookie("player");
@@ -111,6 +70,6 @@ public class ArmoryController {
             return;
         }
 
-        getInventoryFromPlayer(ctx);
+        getInventoryFromPlayer(ctx, player);
     }
 }

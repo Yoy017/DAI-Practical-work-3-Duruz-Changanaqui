@@ -25,7 +25,7 @@
     </tr>
     @for(Player player : players)
         <tr>
-            <td><a href="/armory?name=${player.getName()}">${player.getName()}</a></td>
+            <td><a href="/armory?player=${player.getName()}">${player.getName()}</a></td>
             <td>${player.getExperience()}</td>
             <td>${player.getBalance()}</td>
             <td>${player.getChampion()}</td>

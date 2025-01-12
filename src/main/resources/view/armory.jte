@@ -44,10 +44,6 @@
 <%--                                        </form>--%>
 <%--                                    </li>--%>
                                     <li>
-<%--                                        <form action="/armory" method="delete">--%>
-<%--                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">--%>
-<%--                                            <button type="submit" class="dropdown-item text-danger">Delete</button>--%>
-<%--                                        </form>--%>
                                         <form action="/armory" method="post">
                                             <input type="hidden" name="_method" value="delete">
                                             <input type="hidden" name="itemName" value="${slot.getItem().getName()}">
