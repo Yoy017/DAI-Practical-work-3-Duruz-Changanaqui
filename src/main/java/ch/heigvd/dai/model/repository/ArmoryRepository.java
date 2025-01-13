@@ -20,7 +20,7 @@ public class ArmoryRepository {
 
     public Inventory getInventoryFromPlayer(String name) {
         Inventory inventory = new Inventory();
-        String sql = "SELECT * FROM vw_joueurs_inventaire WHERE joueur_nom = ?;";
+        String sql = "SELECT * FROM vw_joueurs_inventaire WHERE nom_joueur = ?;";
         try (Connection conn = databaseProvider.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, name);
@@ -29,7 +29,7 @@ public class ArmoryRepository {
                     inventory.addSlot(
                             new Slot(rs.getString("nom_type"),
                             new Item(
-                                    rs.getInt("inventaire_id"),
+                                    rs.getInt("id_inventaire"),
                                     rs.getString("objet_nom"),
                                     rs.getString("description"),
                                     rs.getString("nom_type"),
@@ -48,7 +48,7 @@ public class ArmoryRepository {
         String sql = "DELETE FROM slot\n" +
                 "    WHERE id_objet = ?\n" +
                 "    AND id_inventaire = (\n" +
-                "        SELECT inventaire_id FROM joueur WHERE nom = ?\n" +
+                "        SELECT id_inventaire FROM joueur WHERE nom = ?\n" +
                 "        );";
         try (Connection conn = databaseProvider.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);) {

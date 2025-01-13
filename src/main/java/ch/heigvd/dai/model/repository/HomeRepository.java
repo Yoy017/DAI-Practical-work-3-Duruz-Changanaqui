@@ -38,36 +38,9 @@ public class HomeRepository {
         return players;
     }
 
-    public Player findById(int id) {
-        String sql = "SELECT * FROM joueur WHERE id = ?";
-        try (Connection conn = databaseProvider.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Player(
-                            rs.getString("name"),
-                            rs.getDouble("experience"),
-                            rs.getInt("balance"),
-                            rs.getString("champion")
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to fetch player with id " + id, e);
-        }
-        return null;
-    }
-
-        public LinkedList<Player> getPlayersByLevel() {
-        String sql = "SELECT nom, experience\n" +
-                "FROM joueur\n" +
-                "    INNER JOIN statistique\n" +
-                "    ON joueur.id_statistique = statistique.id\n" +
-                "GROUP BY joueur.nom, experience\n" +
-                "ORDER BY experience DESC;";
-        LinkedList<Player> players = null;
+    public LinkedList<Player> getPlayersByLevel() {
+        String sql = "SELECT * FROM vw_joueur_classement;";
+        LinkedList<Player> players = new LinkedList<>();
         try (Connection conn = databaseProvider.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -76,8 +49,8 @@ public class HomeRepository {
                 players.add(new Player(
                         rs.getString("nom"),
                         rs.getDouble("experience"),
-                        0,
-                        ""
+                        rs.getInt("solde"),
+                        rs.getString("classe")
                 ));
             }
             return players;
