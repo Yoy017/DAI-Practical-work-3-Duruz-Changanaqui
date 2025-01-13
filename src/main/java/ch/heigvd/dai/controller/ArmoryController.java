@@ -5,6 +5,7 @@ import ch.heigvd.dai.model.entity.Inventory;
 import ch.heigvd.dai.model.repository.ArmoryRepository;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -39,8 +40,33 @@ public class ArmoryController {
                 int itemId = armoryRepository.getIdFromObjectName(itemName);
                 deleteItemFromInventory(ctx, itemId);
             }
+
+            if("equip".equalsIgnoreCase(method)){
+                String itemName = ctx.formParam("itemName");
+                int itemId = armoryRepository.getIdFromObjectName(itemName);
+                equipItem(ctx, itemId);
+            }
+
             getInventoryFromPlayer(ctx, ctx.cookie("player"));
         });
+    }
+
+    private void equipItem(@NotNull Context ctx, int itemId) {
+        String player = ctx.cookie("player");
+        if (player == null) {
+            ctx.status(400).result("Player name is required");
+            return;
+        }
+
+        if (itemId == -1) {
+            ctx.status(400).result("Item name is required");
+            return;
+        }
+
+        if (!armoryRepository.equipItem(itemId, player)) {
+            ctx.status(400).result("Failed to equip item for player: " + player);
+            return;
+        }
     }
 
     public void getInventoryFromPlayer(Context ctx, String playerName) {

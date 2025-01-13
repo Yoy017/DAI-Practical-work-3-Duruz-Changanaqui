@@ -17,7 +17,7 @@
 <body class="bg-light">
 <div class="container my-5">
     <h1 class="mb-4">Items Page</h1>
-    <p>Here you can see all the items available in the database and add them to your inventory.</p>
+    <p>Here you can see all the items you do not pocess available in the game. Select + to add it in your inventory !</p>
     <div class="row">
         @for (Item item : items)
             <div class="col-md-4 mb-4">
@@ -44,6 +44,11 @@
                         <form method="post" action="/items">
                             <input type="hidden" name="itemId" value="${item.getId()}">
                             <button type="submit" class="btn btn-outline-primary">+</button>
+                        </form>
+                        <form method="post" action="/items">
+                            <input type="hidden" name="_method" value="update">
+                            <input type="hidden" name="itemId" value="${item.getId()}">
+                            <button type="submit" class="btn btn-outline-secondary">Update</button>
                         </form>
                     </div>
                 </div>

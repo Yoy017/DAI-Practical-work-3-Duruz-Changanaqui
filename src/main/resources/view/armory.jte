@@ -50,6 +50,13 @@
                                             <button type="submit" class="dropdown-item text-danger">Delete</button>
                                         </form>
                                     </li>
+                                    <li>
+                                        <form action="/armory" method="post">
+                                            <input type="hidden" name="_method" value="equip">
+                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">
+                                            <button type="submit" class="dropdown-item">Equip</button>
+                                        </form>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

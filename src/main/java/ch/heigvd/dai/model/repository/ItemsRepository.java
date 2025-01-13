@@ -19,17 +19,7 @@ public class ItemsRepository {
     // TODO: ADD STATISTIC TO ITEM and PLAYER ------------------------------------------------------------
     public LinkedList<Item> getAllNewItems(String name) {
         LinkedList<Item> items = new LinkedList<>();
-        String sql = "SELECT * FROM objet\n" +
-                "WHERE objet.id NOT IN (\n" +
-                "        SELECT o.id FROM slot AS s\n" +
-                "                INNER JOIN inventaire\n" +
-                "                ON s.id_inventaire = inventaire.id\n" +
-                "                INNER JOIN objet AS o\n" +
-                "                ON s.id_objet = o.id\n" +
-                "                INNER JOIN statistique\n" +
-                "                ON o.id_statistique = statistique.id\n" +
-                "                WHERE nom_joueur = ?\n" +
-                "    );";
+        String sql = "";
         try (Connection conn = databaseProvider.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);) {
                 stmt.setString(1, name);
