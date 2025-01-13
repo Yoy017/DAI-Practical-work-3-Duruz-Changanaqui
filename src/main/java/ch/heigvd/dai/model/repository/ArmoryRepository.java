@@ -30,7 +30,7 @@ public class ArmoryRepository {
                             new Slot(rs.getString("nom_type"),
                             new Item(
                                     rs.getInt("id_inventaire"),
-                                    rs.getString("objet_nom"),
+                                    rs.getString("nom_objet"),
                                     rs.getString("description"),
                                     rs.getString("nom_type"),
                                     rs.getString("nom_rarete"),

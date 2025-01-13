@@ -19,15 +19,16 @@ public class ItemsRepository {
     // TODO: ADD STATISTIC TO ITEM and PLAYER ------------------------------------------------------------
     public LinkedList<Item> getAllNewItems(String name) {
         LinkedList<Item> items = new LinkedList<>();
-        String sql = "";
+        String sql = "SELECT * FROM vw_objets_non_possedes\n" +
+                "WHERE nom_joueur = ?;";
         try (Connection conn = databaseProvider.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);) {
                 stmt.setString(1, name);
                 try (var rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         items.add(new Item(
-                                rs.getInt("id"),
-                                rs.getString("nom"),
+                                rs.getInt("id_objet"),
+                                rs.getString("nom_objet"),
                                 rs.getString("description"),
                                 rs.getString("nom_type"),
                                 rs.getString("nom_rarete"),
@@ -41,7 +42,7 @@ public class ItemsRepository {
         return items;
     }
 
-    public boolean addItemToSlot(String playerName, long itemId) {
+    public boolean addItemToSlot(String playerName, int itemId) {
         String sql = "INSERT INTO slot (id_inventaire, id_objet)\n" +
                 "SELECT j.id_inventaire, o.id\n" +
                 "FROM joueur j\n" +

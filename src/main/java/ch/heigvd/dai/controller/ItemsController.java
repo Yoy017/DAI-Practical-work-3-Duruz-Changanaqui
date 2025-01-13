@@ -15,11 +15,11 @@ public class ItemsController {
 
     public ItemsController(Javalin app, PostgresDatabaseConnection databaseProvider) {
         this.itemsRepository = new ItemsRepository(databaseProvider);
-        app.get(URL, this::showItems);
+        app.get(URL, this::showNewItems);
         app.post(URL, this::addItemToInventory);
     }
 
-    private void showItems(Context ctx) {
+    private void showNewItems(Context ctx) {
         String name = ctx.cookie("player");
         if (name == null) {
             ctx.status(400).result("Player name is required");
@@ -31,15 +31,14 @@ public class ItemsController {
     }
 
     private void addItemToInventory(Context ctx) {
-        System.out.println("Adding item to inventory");
         String player = ctx.cookie("player");
 
-        long itemId = Long.parseLong(ctx.formParam("itemId"));
+        int itemId = Integer.parseInt(ctx.formParam("itemId"));
         if (!itemsRepository.addItemToSlot(player, itemId)) {
             ctx.status(400).result("Failed to add item to inventory");
             return;
         }
 
-        showItems(ctx);
+        showNewItems(ctx);
     }
 }
