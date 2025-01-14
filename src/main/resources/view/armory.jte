@@ -1,7 +1,8 @@
 @import ch.heigvd.dai.model.entity.Inventory
+@import ch.heigvd.dai.model.entity.Item
 @import ch.heigvd.dai.model.entity.Slot
 @import ch.heigvd.dai.model.entity.SlotType
-@import ch.heigvd.dai.model.entity.RarityType
+@import ch.heigvd.dai.model.entity.ItemType
 
 @param Inventory inventory
 
@@ -42,14 +43,15 @@
             </div>
         </div>
 
-        <!-- Equipped Items Section -->
         <div class="col-md-8 mb-4">
+            <!-- Equipped Items Section -->
             <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <h5 class="card-title">Equipped Items</h5>
                     <div class="row">
                         @for (Slot slot : inventory.getSlots())
-                            @if (SlotType.EQUIPMENT.equals(slot.getItem().getType()))
+                            ${slot.getType()}
+                            @if (slot.getType().equals(SlotType.EQUIPMENT))
                                 <div class="col-md-6 mb-3">
                                     <div class="border p-2 rounded">
                                         <div class="d-flex justify-content-between align-items-center">
@@ -83,11 +85,6 @@
                                 </div>
                             @endif
                         @endfor
-                        <div class="col-md-6 mb-3">
-                            <a href="/items" class="border p-2 rounded bg-light d-flex justify-content-center align-items-center text-decoration-none">
-                                <i class="bi bi-plus-circle fs-3"></i>
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -98,7 +95,7 @@
                     <h5 class="card-title">Inventory</h5>
                     <div class="row">
                         @for (Slot slot : inventory.getSlots())
-                            @if (!SlotType.EQUIPMENT.equals(slot.getItem().getType()))
+                            @if (slot.getType().equals(SlotType.BAG))
                                 <div class="col-md-4 mb-3">
                                     <div class="border p-2 rounded">
                                         <div class="d-flex justify-content-between align-items-center">
@@ -128,7 +125,6 @@
                                             </div>
                                         </div>
                                         <p>${slot.getItem().getDescription()}</p>
-                                        <p>Rarity: ${slot.getItem().getRarity().toString()}</p>
                                     </div>
                                 </div>
                             @endif

@@ -46,8 +46,6 @@ public class ArmoryController {
                 int itemId = armoryRepository.getIdFromObjectName(itemName);
                 equipItem(ctx, itemId);
             }
-
-            getInventoryFromPlayer(ctx, ctx.cookie("player"));
         });
     }
 
@@ -63,10 +61,13 @@ public class ArmoryController {
             return;
         }
 
-        if (!armoryRepository.equipItem(itemId, player)) {
+        int inventoryId = armoryRepository.getIdInventoryFromPlayer(player);
+        if (!armoryRepository.equipItem(inventoryId, itemId)) {
             ctx.status(400).result("Failed to equip item for player: " + player);
             return;
         }
+
+        getInventoryFromPlayer(ctx, player);
     }
 
     public void getInventoryFromPlayer(Context ctx, String playerName) {

@@ -5,7 +5,7 @@ public enum SlotType {
 
     protected static SlotType getTypeFromString(String type) {
         switch (type) {
-            case "Sac":
+            case "Bag":
                 return SlotType.BAG;
             case "Equipement":
                 return SlotType.EQUIPMENT;
