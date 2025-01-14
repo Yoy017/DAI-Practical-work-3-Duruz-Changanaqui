@@ -15,76 +15,79 @@
     <title>Armory - Inventory</title>
 </head>
 <body class="bg-light">
-
 <div class="container my-5">
     <h1 class="mb-4">Armory Page</h1>
-    <p>Here you can see all the weapons and armors that you have in your inventory.</p>
+    <p>Manage your equipment and inventory below.</p>
     <div class="row">
+        <!-- Player Statistics Section -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Player Statistics</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">Level: <strong>25</strong></li>
+                        <li class="list-group-item">Health: <strong>120 HP</strong></li>
+                        <li class="list-group-item">Mana: <strong>80 MP</strong></li>
+                        <li class="list-group-item">Strength: <strong>15</strong></li>
+                        <li class="list-group-item">Agility: <strong>10</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-        <!-- Display all items in the inventory -->
-        @if (inventory.getSlots() != null)
-        @for (Slot slot : inventory.getSlots())
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="card-title">
-                                <i class="@if (SlotType.EQUIPMENT.equals(slot.getItem().getType())) bi bi-shield @else bi bi-bag @endif me-2"></i>
-                                ${slot.getItem().getName()}
-                            </h5>
-                            <div class="dropdown">
-                                <button class="btn btn-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-<%--                                    <li>--%>
-<%--                                        <form action="/armory" method="put">--%>
-<%--                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">--%>
-<%--                                            <button type="submit" class="dropdown-item">Update</button>--%>
-<%--                                        </form>--%>
-<%--                                    </li>--%>
-                                    <li>
-                                        <form action="/armory" method="post">
-                                            <input type="hidden" name="_method" value="delete">
-                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">
-                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
-                                        </form>
-                                    </li>
-                                    <li>
-                                        <form action="/armory" method="post">
-                                            <input type="hidden" name="_method" value="equip">
-                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">
-                                            <button type="submit" class="dropdown-item">Equip</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
+        <!-- Equipped Items Section -->
+        <div class="col-md-8 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Equipped Items</h5>
+                    <div class="row">
+                        @for (Slot slot : inventory.getSlots())
+                            @if (SlotType.EQUIPMENT.equals(slot.getItem().getType()))
+                                <div class="col-md-6 mb-3">
+                                    <div class="border p-2 rounded bg-light">
+                                        <strong>${slot.getItem().getName()}</strong>
+                                        <p>${slot.getItem().getDescription()}</p>
+                                    </div>
+                                </div>
+                            @endif
+                        @endfor
+                        <div class="col-md-6 mb-3">
+                            <a href="/items" class="border p-2 rounded bg-light d-flex justify-content-center align-items-center text-decoration-none">
+                                <i class="bi bi-plus-circle fs-3"></i>
+                            </a>
                         </div>
-                        <p class="card-text">${slot.getItem().getDescription()}</p>
-                        <p class="mb-1"><strong>Level Required:</strong> ${slot.getItem().getLevelRequired()}</p>
-                        <p>
-                            <strong>Rarity:</strong>
-                            <span class="badge
-                                @if (RarityType.COMMON.equals(slot.getItem().getRarity().getType())) bg-secondary
-                                @elseif (RarityType.UNCOMMON.equals(slot.getItem().getRarity().getType())) bg-success
-                                @elseif (RarityType.RARE.equals(slot.getItem().getRarity().getType())) bg-primary
-                                @elseif (RarityType.EPIC.equals(slot.getItem().getRarity().getType())) bg-warning text-dark
-                                @elseif (RarityType.LEGENDARY.equals(slot.getItem().getRarity().getType())) bg-danger
-                                @endif">
-                                ${slot.getItem().getRarity().toString()}
-                            </span>
-                        </p>
                     </div>
                 </div>
             </div>
-        @endfor
-        @endif
+
+            <!-- Inventory Section -->
+            <div class="card mt-4 shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Inventory</h5>
+                    <div class="row">
+                        @for (Slot slot : inventory.getSlots())
+                            @if (!SlotType.EQUIPMENT.equals(slot.getItem().getType()))
+                                <div class="col-md-4 mb-3">
+                                    <div class="border p-2 rounded bg-white">
+                                        <strong>${slot.getItem().getName()}</strong>
+                                        <p>${slot.getItem().getDescription()}</p>
+                                    </div>
+                                </div>
+                            @endif
+                        @endfor
+                        <div class="col-md-4 mb-3">
+                            <a href="/items" class="border p-2 rounded bg-white d-flex justify-content-center align-items-center text-decoration-none">
+                                <i class="bi bi-plus-circle fs-3"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <a href="/items" class="btn btn-primary"><i class="bi bi-plus"></i></a>
-    </div>
+    <a href="/home" class="btn btn-link">Back to home</a>
 </div>
-<a href="/home" class="btn btn-link">Back to home</a>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
