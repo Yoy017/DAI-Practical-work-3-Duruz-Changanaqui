@@ -13,6 +13,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <title>Armory - Inventory</title>
+    <style>
+        .rarity-common { color: #6c757d; }
+        .rarity-uncommon { color: #198754; }
+        .rarity-rare { color: #0d6efd; }
+        .rarity-epic { color: #ffc107; }
+        .rarity-legendary { color: #dc3545; }
+    </style>
 </head>
 <body class="bg-light">
 <div class="container my-5">
@@ -44,8 +51,33 @@
                         @for (Slot slot : inventory.getSlots())
                             @if (SlotType.EQUIPMENT.equals(slot.getItem().getType()))
                                 <div class="col-md-6 mb-3">
-                                    <div class="border p-2 rounded bg-light">
-                                        <strong>${slot.getItem().getName()}</strong>
+                                    <div class="border p-2 rounded">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="rarity-${slot.getItem().getRarity().toString().toLowerCase()}">
+                                                ${slot.getItem().getName()} <small> - ${slot.getItem().getLevelRequired()}</small>
+                                            </strong>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="bi bi-three-dots"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <form action="/armory" method="post">
+                                                            <input type="hidden" name="_method" value="unequip">
+                                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">
+                                                            <button type="submit" class="dropdown-item">Unequip</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form action="/armory" method="post">
+                                                            <input type="hidden" name="_method" value="delete">
+                                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">
+                                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                         <p>${slot.getItem().getDescription()}</p>
                                     </div>
                                 </div>
@@ -68,9 +100,35 @@
                         @for (Slot slot : inventory.getSlots())
                             @if (!SlotType.EQUIPMENT.equals(slot.getItem().getType()))
                                 <div class="col-md-4 mb-3">
-                                    <div class="border p-2 rounded bg-white">
-                                        <strong>${slot.getItem().getName()}</strong>
+                                    <div class="border p-2 rounded">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="rarity-${slot.getItem().getRarity().toString().toLowerCase()}">
+                                                ${slot.getItem().getName()} <small> - ${slot.getItem().getLevelRequired()}</small>
+                                            </strong>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="bi bi-three-dots"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <form action="/armory" method="post">
+                                                            <input type="hidden" name="_method" value="equip">
+                                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">
+                                                            <button type="submit" class="dropdown-item">Equip</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form action="/armory" method="post">
+                                                            <input type="hidden" name="_method" value="delete">
+                                                            <input type="hidden" name="itemName" value="${slot.getItem().getName()}">
+                                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                         <p>${slot.getItem().getDescription()}</p>
+                                        <p>Rarity: ${slot.getItem().getRarity().toString()}</p>
                                     </div>
                                 </div>
                             @endif
