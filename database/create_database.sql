@@ -156,7 +156,7 @@ ALTER TABLE Accepte
 ADD CONSTRAINT FK_Accepte_Quete FOREIGN KEY (nom_quete) REFERENCES Quete(nom);
 
 ALTER TABLE Accepte
-ADD CONSTRAINT FK_Accepte_Joueur FOREIGN KEY (nom_joueur) REFERENCES Joueur(nom);
+ADD CONSTRAINT FK_Accepte_Joueur FOREIGN KEY (nom_joueur) REFERENCES Joueur(nom) ON DELETE CASCADE;
 
 ALTER TABLE Propose
 ADD CONSTRAINT FK_Propose_Quete FOREIGN KEY (nom_pnj) REFERENCES PNJ(nom);
