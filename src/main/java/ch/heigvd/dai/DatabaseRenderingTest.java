@@ -3,6 +3,7 @@ package ch.heigvd.dai;
 import ch.heigvd.dai.controller.ArmoryController;
 import ch.heigvd.dai.controller.HomeController;
 import ch.heigvd.dai.controller.ItemsController;
+import ch.heigvd.dai.controller.RegisterController;
 import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
@@ -29,6 +30,7 @@ public class DatabaseRenderingTest {
         HomeController homeController = new HomeController(app, conn);
         ArmoryController armoryController = new ArmoryController(app, conn);
         ItemsController itemsController = new ItemsController(app, conn);
+        RegisterController reindexController = new RegisterController(app, conn);
 
         app.get("/", ctx ->  ctx.redirect("/home"));
 

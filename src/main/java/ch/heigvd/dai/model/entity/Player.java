@@ -1,5 +1,7 @@
 package ch.heigvd.dai.model.entity;
 
+import java.sql.*;
+
 public class Player extends Character {
     private double experience;
     private int balance;

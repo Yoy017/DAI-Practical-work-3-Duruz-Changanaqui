@@ -147,10 +147,10 @@ CREATE TABLE Propose(
 
 -- Joueur
 ALTER TABLE Joueur
-ADD CONSTRAINT FK_Joueur_Statistique FOREIGN KEY (id_statistique) REFERENCES Statistique(id);
+ADD CONSTRAINT FK_Joueur_Statistique FOREIGN KEY (id_statistique) REFERENCES Statistique(id) ON DELETE CASCADE;
 
 ALTER TABLE Joueur
-ADD CONSTRAINT FK_Joueur_Inventaire FOREIGN KEY (id_inventaire) REFERENCES Inventaire(id);
+ADD CONSTRAINT FK_Joueur_Inventaire FOREIGN KEY (id_inventaire) REFERENCES Inventaire(id) ON DELETE CASCADE;
 
 ALTER TABLE Accepte
 ADD CONSTRAINT FK_Accepte_Quete FOREIGN KEY (nom_quete) REFERENCES Quete(nom);
@@ -166,10 +166,10 @@ ADD CONSTRAINT FK_Propose_PNJ FOREIGN KEY (nom_quete) REFERENCES Quete(nom);
 
 -- Inventaire
 ALTER TABLE Inventaire
-ADD CONSTRAINT FK_Inventaire_Joueur FOREIGN KEY (nom_joueur) REFERENCES Joueur(nom);
+ADD CONSTRAINT FK_Inventaire_Joueur FOREIGN KEY (nom_joueur) REFERENCES Joueur(nom) ON DELETE CASCADE;
 
 ALTER TABLE Slot
-ADD CONSTRAINT FK_Slot_Inventaire FOREIGN KEY (id_inventaire) REFERENCES Inventaire(id);
+ADD CONSTRAINT FK_Slot_Inventaire FOREIGN KEY (id_inventaire) REFERENCES Inventaire(id) ON DELETE CASCADE;
 
 ALTER TABLE Slot
 ADD CONSTRAINT FK_Slot_Objet FOREIGN KEY (id_objet) REFERENCES Objet(id);
