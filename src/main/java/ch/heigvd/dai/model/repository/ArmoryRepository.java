@@ -4,12 +4,12 @@ import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import ch.heigvd.dai.model.entity.Inventory;
 import ch.heigvd.dai.model.entity.Item;
 import ch.heigvd.dai.model.entity.Slot;
+import ch.heigvd.dai.model.entity.SlotType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
 
 public class ArmoryRepository {
     private final PostgresDatabaseConnection databaseProvider;
@@ -27,7 +27,7 @@ public class ArmoryRepository {
             try(ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     inventory.addSlot(
-                            new Slot(rs.getString("nom_type"),
+                            new Slot(rs.getString("type_slot"),
                             new Item(
                                     rs.getInt("id_inventaire"),
                                     rs.getString("nom_objet"),
@@ -76,19 +76,45 @@ public class ArmoryRepository {
         return -1;
     }
 
-    public boolean equipItem(int itemId, String player) {
-        String sql = "UPDATE slot\n" +
-                "    SET id_inventaire = (\n" +
-                "        SELECT id_inventaire FROM joueur WHERE nom = ?\n" +
-                "        )\n" +
-                "    WHERE id_objet = ?;";
+    public boolean equipItem(int inventoryId, int itemId) {
+        String sql = "UPDATE slot SET type = 'Equipement'\n" +
+                "WHERE id_inventaire = ? AND id_objet = ?;";
         try (Connection conn = databaseProvider.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);) {
-            stmt.setString(1, player);
+            stmt.setInt(1, inventoryId);
             stmt.setInt(2, itemId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new RuntimeException("Failed to equip item", e);
         }
+    }
+
+    public boolean unequipItem(int inventoryId, int itemId) {
+        String sql = "UPDATE slot SET type = 'Bag'\n" +
+                "WHERE id_inventaire = ? AND id_objet = ?;";
+        try (Connection conn = databaseProvider.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setInt(1, inventoryId);
+            stmt.setInt(2, itemId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to unequip item", e);
+        }
+    }
+
+    public int getIdInventoryFromPlayer(String player) {
+        String sql = "SELECT id_inventaire FROM joueur WHERE nom = ?;";
+        try (Connection conn = databaseProvider.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setString(1, player);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id_inventaire");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch inventory id", e);
+        }
+        return -1;
     }
 }

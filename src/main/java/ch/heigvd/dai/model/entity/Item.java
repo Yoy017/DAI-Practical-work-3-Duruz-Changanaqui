@@ -5,6 +5,7 @@ public class Item {
     protected final String name, description;
     protected int quantity;
     protected final ItemType type;
+    //protected SlotType slotType = SlotType.OTHER;
     protected Rarity rarity;
     protected final double levelRequired;
 
@@ -60,36 +61,5 @@ public class Item {
 
     public int getId() {
         return id;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-
-        if (this.quantity < 0) {
-            throw new IllegalArgumentException("Quantity cannot be negative");
-        }
-    }
-}
-
-enum ItemType {
-    WEAPON, ARMOR, CONSUMABLE, RESSOURCE, OTHER;
-
-    protected static ItemType getTypeFromString(String type) {
-        switch (type) {
-            case "Arme":
-                return ItemType.WEAPON;
-            case "Armure":
-                return ItemType.ARMOR;
-            case "Consommable":
-                return ItemType.CONSUMABLE;
-            case "Ressource":
-                return ItemType.RESSOURCE;
-            default:
-                return ItemType.OTHER;
-        }
-    }
-
-    public boolean equals(ItemType type) {
-        return this == type;
     }
 }

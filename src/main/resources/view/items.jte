@@ -38,12 +38,10 @@
                                 @elseif (RarityType.EPIC.equals(item.getRarity().getType())) rarity-epic
                                 @elseif (RarityType.LEGENDARY.equals(item.getRarity().getType())) rarity-legendary
                                 @endif">
-                                ${item.getName()}
+                                ${item.getName()} - ${item.getLevelRequired()}
                             </p>
                         </h5>
                         <p class="card-text">${item.getDescription()}</p>
-                        <p class="mb-1"><strong>Level Required:</strong> ${item.getLevelRequired()}</p>
-
                         <form method="post" action="/items">
                             <input type="hidden" name="itemId" value="${item.getId()}">
                             <button type="submit" class="btn btn-outline-primary">+</button>

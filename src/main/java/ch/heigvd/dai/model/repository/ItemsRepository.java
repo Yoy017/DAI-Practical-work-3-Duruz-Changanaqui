@@ -53,8 +53,8 @@ public class ItemsRepository {
                 stmt.setLong(1, itemId);
                 stmt.setString(2, playerName);
                 return stmt.executeUpdate() > 0;
-            } catch (SQLException e) {
-                throw new RuntimeException("Failed to add item to inventory", e);
-            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to add item to inventory", e);
+        }
     }
 }

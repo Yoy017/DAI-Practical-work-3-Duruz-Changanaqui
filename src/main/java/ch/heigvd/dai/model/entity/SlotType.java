@@ -5,7 +5,7 @@ public enum SlotType {
 
     protected static SlotType getTypeFromString(String type) {
         switch (type) {
-            case "Sac":
+            case "Bag":
                 return SlotType.BAG;
             case "Equipement":
                 return SlotType.EQUIPMENT;
@@ -15,6 +15,6 @@ public enum SlotType {
     }
 
     public boolean equals(SlotType type) {
-        return this == type;
+        return this.ordinal() == type.ordinal();
     }
 }

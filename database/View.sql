@@ -30,7 +30,7 @@ JOIN Recompense r ON q.nom = r.nom_quete;
 
 -- Vue pour lister tous les joueurs avec leurs inventaires et les objets qu'ils possèdent
 CREATE VIEW vw_joueurs_inventaire AS
-SELECT j.nom AS nom_joueur, i.id AS id_inventaire, o.nom AS nom_objet, o.description, o.niveauRequis, o.nom_type, o.nom_rarete, s.intelligence, s.agilite, s.force, s.endurance
+SELECT j.nom AS nom_joueur, i.id AS id_inventaire, sl.type AS type_slot, o.nom AS nom_objet, o.description, o.niveauRequis, o.nom_type, o.nom_rarete, s.intelligence, s.agilite, s.force, s.endurance
 FROM Joueur j
 JOIN Inventaire i ON j.id_inventaire = i.id
 JOIN Slot sl ON i.id = sl.id_inventaire
