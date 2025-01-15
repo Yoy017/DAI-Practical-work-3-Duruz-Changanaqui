@@ -61,7 +61,7 @@ public class RegisterController {
 
         if (createCharacter(name, profession)) {
             //ctx.render("register.jte", Map.of("classes", getEnumValues("class"), "errorMessage", null));
-            ctx.redirect("/players");
+            ctx.redirect("/home");
         } else {
             ctx.render("register.jte", Map.of("classes", getEnumValues("class"),
                     "errorMessage", "Failed to create character. Please try again later."));

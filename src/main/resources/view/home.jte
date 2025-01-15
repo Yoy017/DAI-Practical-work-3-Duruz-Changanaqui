@@ -28,6 +28,7 @@
                 <th scope="col">Experience</th>
                 <th scope="col">Balance</th>
                 <th scope="col">Champion</th>
+                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -37,11 +38,22 @@
                     <td>${player.getExperience()}</td>
                     <td>${player.getBalance()}</td>
                     <td>${player.getChampion()}</td>
+                    <td>
+                        <!-- Bouton pour supprimer un joueur -->
+                        <form action="/delete-player" method="post" style="display:inline;">
+                            <input type="hidden" name="playerName" value="${player.getName()}">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             @endfor
             </tbody>
         </table>
     </div>
+    <p>Create a New Character</p>
+    <form action="/register" method="get">
+        <button type="submit">Register</button>
+    </form>
 </div>
 
 <!-- Bootstrap JS (optional) -->
