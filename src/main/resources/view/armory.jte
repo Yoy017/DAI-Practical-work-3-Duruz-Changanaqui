@@ -49,8 +49,8 @@
                 <div class="card-body">
                     <h5 class="card-title">Equipped Items</h5>
                     <div class="row">
+                        @if (inventory.getSlots() != null)
                         @for (Slot slot : inventory.getSlots())
-                            ${slot.getType()}
                             @if (slot.getType().equals(SlotType.EQUIPMENT))
                                 <div class="col-md-6 mb-3">
                                     <div class="border p-2 rounded">
@@ -59,7 +59,7 @@
                                                 ${slot.getItem().getName()} <small> - ${slot.getItem().getLevelRequired()}</small>
                                             </strong>
                                             <div class="dropdown">
-                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="bi bi-three-dots"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
@@ -85,6 +85,7 @@
                                 </div>
                             @endif
                         @endfor
+                        @endif
                     </div>
                 </div>
             </div>
@@ -94,6 +95,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Inventory</h5>
                     <div class="row">
+                        @if (inventory.getSlots() != null)
                         @for (Slot slot : inventory.getSlots())
                             @if (slot.getType().equals(SlotType.BAG))
                                 <div class="col-md-4 mb-3">
@@ -129,6 +131,7 @@
                                 </div>
                             @endif
                         @endfor
+                        @endif
                         <div class="col-md-4 mb-3">
                             <a href="/items" class="border p-2 rounded bg-white d-flex justify-content-center align-items-center text-decoration-none">
                                 <i class="bi bi-plus-circle fs-3"></i>

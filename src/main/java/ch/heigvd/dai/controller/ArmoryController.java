@@ -46,6 +46,12 @@ public class ArmoryController {
                 int itemId = armoryRepository.getIdFromObjectName(itemName);
                 equipItem(ctx, itemId);
             }
+
+            if("unequip".equalsIgnoreCase(method)){
+                String itemName = ctx.formParam("itemName");
+                int itemId = armoryRepository.getIdFromObjectName(itemName);
+                unequipItem(ctx, itemId);
+            }
         });
     }
 
@@ -64,6 +70,27 @@ public class ArmoryController {
         int inventoryId = armoryRepository.getIdInventoryFromPlayer(player);
         if (!armoryRepository.equipItem(inventoryId, itemId)) {
             ctx.status(400).result("Failed to equip item for player: " + player);
+            return;
+        }
+
+        getInventoryFromPlayer(ctx, player);
+    }
+
+    private void unequipItem(@NotNull Context ctx, int itemId) {
+        String player = ctx.cookie("player");
+        if (player == null) {
+            ctx.status(400).result("Player name is required");
+            return;
+        }
+
+        if (itemId == -1) {
+            ctx.status(400).result("Item name is required");
+            return;
+        }
+
+        int inventoryId = armoryRepository.getIdInventoryFromPlayer(player);
+        if (!armoryRepository.unequipItem(inventoryId, itemId)) {
+            ctx.status(400).result("Failed to unequip item for player: " + player);
             return;
         }
 

@@ -4,6 +4,7 @@ import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import ch.heigvd.dai.model.entity.Inventory;
 import ch.heigvd.dai.model.entity.Item;
 import ch.heigvd.dai.model.entity.Slot;
+import ch.heigvd.dai.model.entity.SlotType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +27,7 @@ public class ArmoryRepository {
             try(ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     inventory.addSlot(
-                            new Slot(rs.getString("nom_type"),
+                            new Slot(rs.getString("type_slot"),
                             new Item(
                                     rs.getInt("id_inventaire"),
                                     rs.getString("nom_objet"),
@@ -85,6 +86,19 @@ public class ArmoryRepository {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new RuntimeException("Failed to equip item", e);
+        }
+    }
+
+    public boolean unequipItem(int inventoryId, int itemId) {
+        String sql = "UPDATE slot SET type = 'Bag'\n" +
+                "WHERE id_inventaire = ? AND id_objet = ?;";
+        try (Connection conn = databaseProvider.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setInt(1, inventoryId);
+            stmt.setInt(2, itemId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to unequip item", e);
         }
     }
 

@@ -15,6 +15,6 @@ public enum SlotType {
     }
 
     public boolean equals(SlotType type) {
-        return this == type;
+        return this.ordinal() == type.ordinal();
     }
 }
