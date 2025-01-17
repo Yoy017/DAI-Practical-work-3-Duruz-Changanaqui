@@ -26,6 +26,7 @@ public class QuestController {
 
         app.post("/quest/abandon", this::abandonQuest); // Utilisation de DELETE ici
         app.post("/quest/complete", this::completeQuest);
+        app.post("/quest/delete", this::deleteCompletedQuest);
     }
 
     /**
@@ -41,10 +42,12 @@ public class QuestController {
 
         List<Quest> followedQuests = getQuestsForPlayer(playerName);
         List<Quest> availableQuests = getAvailableQuestsForPlayer(playerName);
+        List<Quest> completedQuests = getCompletedQuests(playerName);
         ctx.render("quest.jte", Map.of(
                 "player", player,
                 "followedQuests", followedQuests,
-                "availableQuests", availableQuests
+                "availableQuests", availableQuests,
+                "completedQuests", completedQuests
         ));
     }
 
@@ -84,7 +87,7 @@ public class QuestController {
         String sql = """
             SELECT *
             FROM Quete q
-            JOIN Accepte a ON q.nom = a.nom_quete
+            JOIN Accepte a ON q.nom = a.nom_quete AND a.complete = false
             WHERE a.nom_joueur = ?;
             """;
 
@@ -248,5 +251,52 @@ public class QuestController {
         }
 
         ctx.redirect("/quest"); // Rediriger vers la page des quêtes
+    }
+
+    private List<Quest> getCompletedQuests(String playerName) {
+        List<Quest> completedQuests = new ArrayList<>();
+        try (Connection connection = databaseProvider.getConnection()) {
+            String sql = "SELECT q.* FROM Quete q " +
+                    "JOIN Accepte a ON a.nom_quete = q.nom " +
+                    "WHERE a.nom_joueur = ? AND a.complete = true";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, playerName);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    completedQuests.add(getQuestWithDependency(resultSet));
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch completed quests for player: " + playerName, e);
+        }
+        return completedQuests;
+    }
+
+    // Méthode pour supprimer une quête complétée
+    private void deleteCompletedQuest(Context ctx) {
+        String playerName = ctx.cookie("player");
+        if (playerName == null) {
+            ctx.redirect("/home");
+            return;
+        }
+
+        String questName = ctx.formParam("questName");
+        if (questName == null || questName.isEmpty()) {
+            ctx.status(400).result("Quest name is required.");
+            return;
+        }
+
+        try (Connection connection = databaseProvider.getConnection()) {
+            String sql = "DELETE FROM Accepte WHERE nom_quete = ? AND nom_joueur = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, questName);
+                statement.setString(2, playerName);
+                statement.execute();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete quest: " + questName + " for player: " + playerName, e);
+        }
+
+        ctx.redirect("/quest");
     }
 }

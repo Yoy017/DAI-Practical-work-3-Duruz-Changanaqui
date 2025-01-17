@@ -179,7 +179,7 @@ BEGIN
     WHERE j.nom = NEW.nom;
 END;
 $$ LANGUAGE plpgsql;
-
+--Used
 -- Get Available quests for a player
 CREATE OR REPLACE FUNCTION get_available_quests_for_player(
     player_name VARCHAR,
@@ -204,7 +204,30 @@ BEGIN
     WHERE a.nom_quete IS NULL
       AND q.niveauRequis <= player_experience
       AND (q.nom_quete_requise IS NULL OR q.nom_quete_requise IN (
-          SELECT nom_quete FROM Accepte WHERE nom_joueur = player_name
+          SELECT nom_quete FROM Accepte WHERE nom_joueur = player_name AND complete = true
       ));
 END;
 $$;
+--Used
+CREATE OR REPLACE FUNCTION check_and_delete_dependent_quest() 
+RETURNS TRIGGER AS
+$$
+BEGIN
+    -- Rechercher toutes les quêtes qui ont la quête supprimée comme "nom_quete_requise"
+    DELETE FROM Accepte
+    WHERE nom_quete IN (
+        SELECT nom
+        FROM Quete
+        WHERE nom_quete_requise = OLD.nom_quete
+    )
+    AND nom_joueur = OLD.nom_joueur;
+
+    -- Retourner l'ancienne ligne (pour compléter la fonction trigger)
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_dependent_quest
+AFTER DELETE ON Accepte
+FOR EACH ROW
+EXECUTE FUNCTION check_and_delete_dependent_quest();
