@@ -187,4 +187,4 @@ ADD CONSTRAINT FK_Recompense_Quete FOREIGN KEY (nom_quete) REFERENCES Quete(nom)
 
 -- Quete
 ALTER TABLE Quete
-ADD CONSTRAINT FK_Quete_Require FOREIGN KEY (nom_quete_requise) REFERENCES Quete(nom);
+ADD CONSTRAINT FK_Quete_Require FOREIGN KEY (nom_quete_requise) REFERENCES Quete(nom) ON DELETE CASCADE;

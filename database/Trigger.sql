@@ -31,7 +31,7 @@ CREATE TRIGGER trg_update_joueur_solde
 AFTER INSERT ON Recompense
 FOR EACH ROW
 EXECUTE FUNCTION update_joueur_solde();
-
+/*
 -- Trigger to update nom_quete in Joueur when a Quete is deleted
 CREATE OR REPLACE FUNCTION update_joueur_on_quete_delete()
 RETURNS TRIGGER AS $$
@@ -79,7 +79,7 @@ CREATE TRIGGER trg_update_joueur_on_quete_insert
 AFTER INSERT ON Accepte
 FOR EACH ROW
 EXECUTE FUNCTION update_joueur_on_quete_insert();
-
+*/
 -- Trigger to update the statistics of a player when an object is removed from his inventory
 CREATE OR REPLACE FUNCTION update_joueur_statistics_on_object_delete()
 RETURNS TRIGGER AS $$
@@ -179,3 +179,32 @@ BEGIN
     WHERE j.nom = NEW.nom;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Get Available quests for a player
+CREATE OR REPLACE FUNCTION get_available_quests_for_player(
+    player_name VARCHAR,
+    player_experience DECIMAL
+)
+RETURNS TABLE(
+    nom VARCHAR,
+    description VARCHAR,
+    niveauRequis DECIMAL,
+    dateDebut TIMESTAMP,
+    dateFin TIMESTAMP,
+    type quest_type,
+    nom_quete_requise VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT q.nom, q.description, q.niveauRequis, q.dateDebut, q.dateFin, q.type, q.nom_quete_requise
+    FROM Quete q
+    LEFT JOIN Accepte a ON a.nom_quete = q.nom
+    WHERE a.nom_quete IS NULL
+      AND q.niveauRequis <= player_experience
+      AND (q.nom_quete_requise IS NULL OR q.nom_quete_requise IN (
+          SELECT nom_quete FROM Accepte WHERE nom_joueur = player_name
+      ));
+END;
+$$;
