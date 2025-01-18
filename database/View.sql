@@ -1,8 +1,8 @@
 -- VIEWS
 
 -- Vue pour lister toutes les statistiques des joueurs OK
-CREATE VIEW vw_joueurs_statistique AS
-SELECT joueur.nom, s.* FROM joueur
+CREATE VIEW vw_joueurs_statistiques AS
+SELECT joueur.nom AS nom_joueur, s.* FROM joueur
     INNER JOIN statistique s
     ON joueur.id_statistique = s.id;
 

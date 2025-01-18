@@ -1,10 +1,7 @@
 package ch.heigvd.dai.model.repository;
 
 import ch.heigvd.dai.database.PostgresDatabaseConnection;
-import ch.heigvd.dai.model.entity.Inventory;
-import ch.heigvd.dai.model.entity.Item;
-import ch.heigvd.dai.model.entity.Slot;
-import ch.heigvd.dai.model.entity.SlotType;
+import ch.heigvd.dai.model.entity.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -116,5 +113,28 @@ public class ArmoryRepository {
             throw new RuntimeException("Failed to fetch inventory id", e);
         }
         return -1;
+    }
+
+    public Statistic getStatisticFromPlayer(String name) {
+        Statistic statistic = null;
+        String sql = "SELECT * FROM vw_joueurs_statistiques WHERE nom_joueur = ?;";
+        try (Connection conn = databaseProvider.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setString(1, name);
+            try(ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    statistic = new Statistic(
+                            rs.getInt("id"),
+                            rs.getInt("intelligence"),
+                            rs.getInt("agilite"),
+                            rs.getInt("force"),
+                            rs.getInt("endurance")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch players", e);
+        }
+        return statistic;
     }
 }

@@ -1,10 +1,14 @@
-@import ch.heigvd.dai.model.entity.Inventory
+@import ch.heigvd.dai.model.entity.*
 @import ch.heigvd.dai.model.entity.Item
 @import ch.heigvd.dai.model.entity.Slot
 @import ch.heigvd.dai.model.entity.SlotType
 @import ch.heigvd.dai.model.entity.ItemType
+@import ch.heigvd.dai.model.entity.Statistic
+@import ch.heigvd.dai.model.entity.StatisticType
 
 @param Inventory inventory
+@param Statistic statistic
+@param String playerName
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +28,7 @@
 </head>
 <body class="bg-light">
 <div class="container my-5">
-    <h1 class="mb-4">Armory Page</h1>
+    <h1 class="mb-4">${playerName}</h1>
     <p>Manage your equipment and inventory below.</p>
     <div class="row">
         <!-- Player Statistics Section -->
@@ -33,11 +37,9 @@
                 <div class="card-body">
                     <h5 class="card-title">Player Statistics</h5>
                     <ul class="list-group">
-                        <li class="list-group-item">Level: <strong>25</strong></li>
-                        <li class="list-group-item">Health: <strong>120 HP</strong></li>
-                        <li class="list-group-item">Mana: <strong>80 MP</strong></li>
-                        <li class="list-group-item">Strength: <strong>15</strong></li>
-                        <li class="list-group-item">Agility: <strong>10</strong></li>
+                        @for(StatisticType stat : statistic.getStatisticTypes())
+                            <li class="list-group-item">${stat} <strong>${stat.getValue()}</strong></li>
+                        @endfor
                     </ul>
                 </div>
             </div>
