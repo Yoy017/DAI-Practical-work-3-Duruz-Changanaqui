@@ -59,6 +59,7 @@ FROM joueur
 GROUP BY joueur.nom, experience
 ORDER BY experience DESC;
 
+
 -- Vue pour lister tous les PNJ avec les quêtes qu'ils proposent
 -- CREATE VIEW vw_pnj_quete AS
 -- SELECT p.nom AS nom_pnj, q.nom AS nom_quete, q.description, q.niveauRequis, q.dateDebut, q.dateFin, q.type

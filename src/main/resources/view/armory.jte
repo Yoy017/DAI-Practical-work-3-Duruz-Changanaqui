@@ -24,7 +24,13 @@
 </head>
 <body class="bg-light">
 <div class="container my-5">
-    <h1 class="mb-4">Armory Page</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Armory Page</h1>
+        <!-- Bouton pour accéder à la page quest -->
+        <form action="/quest" method="get" style="display:inline;">
+            <button type="submit" class="btn btn-primary">Go to Quests</button>
+        </form>
+    </div>
     <p>Manage your equipment and inventory below.</p>
     <div class="row">
         <!-- Player Statistics Section -->
