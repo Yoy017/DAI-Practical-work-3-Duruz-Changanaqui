@@ -16,7 +16,7 @@ public class ArmoryController {
 
     public ArmoryController(Javalin app, PostgresDatabaseConnection databaseProvider) {
         this.armoryRepository = new ArmoryRepository(databaseProvider);
-
+        //app.get("/quest", this::goToQuests);
         app.get(URL, ctx -> {
             String playerName = ctx.queryParam("player");
             if (playerName != null) {
@@ -55,7 +55,16 @@ public class ArmoryController {
             }
         });
     }
-
+    /*
+    public void goToQuests(Context ctx) {
+        String player = ctx.cookie("player");
+        if (player == null) {
+            ctx.status(400).result("Player name is required");
+            return;
+        }
+        ctx.redirect("/quest");
+    }
+    */
     private void equipItem(@NotNull Context ctx, int itemId) {
         String player = ctx.cookie("player");
         if (player == null) {

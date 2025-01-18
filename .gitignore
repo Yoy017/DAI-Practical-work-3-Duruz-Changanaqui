@@ -7,9 +7,12 @@
 .idea/jarRepositories.xml
 .idea/modules.xml
 .idea/workspace.xml
+.idea/vcs.xml
 *.iws
 *.iml
 *.ipr
+
+/jte-classes/
 
 # Editor-based HTTP Client requests
 .idea/httpRequests/

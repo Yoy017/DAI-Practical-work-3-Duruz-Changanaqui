@@ -31,7 +31,7 @@ CREATE TRIGGER trg_update_joueur_solde
 AFTER INSERT ON Recompense
 FOR EACH ROW
 EXECUTE FUNCTION update_joueur_solde();
-
+/*
 -- Trigger to update nom_quete in Joueur when a Quete is deleted
 CREATE OR REPLACE FUNCTION update_joueur_on_quete_delete()
 RETURNS TRIGGER AS $$
@@ -79,7 +79,7 @@ CREATE TRIGGER trg_update_joueur_on_quete_insert
 AFTER INSERT ON Accepte
 FOR EACH ROW
 EXECUTE FUNCTION update_joueur_on_quete_insert();
-
+*/
 -- Trigger to update the statistics of a player when an object is updated in his inventory OK
 create function update_player_statistic() returns trigger
     language plpgsql
@@ -144,3 +144,55 @@ BEGIN
     WHERE j.nom = NEW.nom;
 END;
 $$ LANGUAGE plpgsql;
+--Used
+-- Get Available quests for a player
+CREATE OR REPLACE FUNCTION get_available_quests_for_player(
+    player_name VARCHAR,
+    player_experience DECIMAL
+)
+RETURNS TABLE(
+    nom VARCHAR,
+    description VARCHAR,
+    niveauRequis DECIMAL,
+    dateDebut TIMESTAMP,
+    dateFin TIMESTAMP,
+    type quest_type,
+    nom_quete_requise VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT q.nom, q.description, q.niveauRequis, q.dateDebut, q.dateFin, q.type, q.nom_quete_requise
+    FROM Quete q
+    LEFT JOIN Accepte a ON a.nom_quete = q.nom
+    WHERE a.nom_quete IS NULL
+      AND q.niveauRequis <= player_experience
+      AND (q.nom_quete_requise IS NULL OR q.nom_quete_requise IN (
+          SELECT nom_quete FROM Accepte WHERE nom_joueur = player_name AND complete = true
+      ));
+END;
+$$;
+--Used
+CREATE OR REPLACE FUNCTION check_and_delete_dependent_quest() 
+RETURNS TRIGGER AS
+$$
+BEGIN
+    -- Rechercher toutes les quêtes qui ont la quête supprimée comme "nom_quete_requise"
+    DELETE FROM Accepte
+    WHERE nom_quete IN (
+        SELECT nom
+        FROM Quete
+        WHERE nom_quete_requise = OLD.nom_quete
+    )
+    AND nom_joueur = OLD.nom_joueur;
+
+    -- Retourner l'ancienne ligne (pour compléter la fonction trigger)
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_dependent_quest
+AFTER DELETE ON Accepte
+FOR EACH ROW
+EXECUTE FUNCTION check_and_delete_dependent_quest();

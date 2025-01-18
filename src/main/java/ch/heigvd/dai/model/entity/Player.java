@@ -46,4 +46,8 @@ public class Player extends Character {
     public void setChampion(String champion) {
         this.champion = champion;
     }
+
+    public boolean canAcceptQuest(Quest quest) {
+        return experience >= quest.getRequiredLevel();
+    }
 }

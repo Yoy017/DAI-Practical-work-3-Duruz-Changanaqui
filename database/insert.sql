@@ -37,6 +37,9 @@ INSERT INTO quete(nom, description, niveaurequis, datedebut, datefin, nom_quete_
 VALUES('Friend of zanahorias', 'Kill 40 bunnies', 0, CURRENT_DATE, CURRENT_DATE + INTERVAL '8 hours', NULL, 'Defi');
 
 INSERT INTO quete(nom, description, niveaurequis, datedebut, datefin, nom_quete_requise, type)
+VALUES('Friend of zanahorias Chapitre 2', 'Kill 40 bunnies', 0, CURRENT_DATE, CURRENT_DATE + INTERVAL '8 hours', 'Friend of zanahorias', 'Defi');
+
+INSERT INTO quete(nom, description, niveaurequis, datedebut, datefin, nom_quete_requise, type)
 VALUES('Supreme', 'Supreme is a long level 50 quest that is the culmination of the story.', 50, NULL, NULL, NULL, 'Principale');
 
 INSERT INTO quete(nom, description, niveaurequis, datedebut, datefin, nom_quete_requise, type)
