@@ -1,10 +1,10 @@
 -- VIEWS
 
--- Vue pour lister un joueur avec ses statistiques
-CREATE VIEW vw_joueur_statistique AS
-SELECT j.nom, j.experience, j.solde, j.classe, s.intelligence, s.agilite, s.force, s.endurance
-FROM Joueur j
-JOIN Statistique s ON j.id_statistique = s.id;
+-- Vue pour lister toutes les statistiques des joueurs OK
+CREATE VIEW vw_joueurs_statistiques AS
+SELECT joueur.nom AS nom_joueur, s.* FROM joueur
+    INNER JOIN statistique s
+    ON joueur.id_statistique = s.id;
 
 -- Vue pour lister toutes les quêtes avec les joueurs qui les ont acceptées et leurs récompenses
 CREATE VIEW vw_quete_joueur_recompense AS
@@ -28,16 +28,19 @@ JOIN Accepte a ON j.nom = a.nom_joueur
 JOIN Quete q ON a.nom_quete = q.nom
 JOIN Recompense r ON q.nom = r.nom_quete;
 
--- Vue pour lister tous les joueurs avec leurs inventaires et les objets qu'ils possèdent
-CREATE VIEW vw_joueurs_inventaire AS
-SELECT j.nom AS nom_joueur, i.id AS id_inventaire, sl.type AS type_slot, o.nom AS nom_objet, o.description, o.niveauRequis, o.nom_type, o.nom_rarete, s.intelligence, s.agilite, s.force, s.endurance
-FROM Joueur j
-JOIN Inventaire i ON j.id_inventaire = i.id
-JOIN Slot sl ON i.id = sl.id_inventaire
-JOIN Objet o ON sl.id_objet = o.id
-JOIN Statistique s ON o.id_statistique = s.id;
+-- Vue pour lister tous les joueurs avec leurs inventaires et les objets qu'ils possèdent OK
+CREATE OR REPLACE VIEW vw_joueurs_inventaire AS
+SELECT joueur.nom AS nom_joueur, o.*, s.type AS type_slot FROM slot AS s
+                INNER JOIN inventaire
+                ON s.id_inventaire = inventaire.id
+                INNER JOIN joueur
+                ON inventaire.id = joueur.id_inventaire
+                INNER JOIN objet AS o
+                ON s.id_objet = o.id
+                INNER JOIN statistique
+                ON o.id_statistique = statistique.id;
 
--- Vue pour lister les objets que le joueur ne possède pas
+-- Vue pour lister les objets que le joueur ne possède pas OK
 CREATE OR REPLACE VIEW vw_objets_non_possedes AS
 SELECT j.nom AS nom_joueur, o.id AS id_objet, o.nom AS nom_objet, o.description, o.niveauRequis, o.nom_type, o.nom_rarete, s.intelligence, s.agilite, s.force, s.endurance
 FROM Joueur j
@@ -50,7 +53,7 @@ LEFT JOIN (
 LEFT JOIN Statistique s ON o.id_statistique = s.id
 WHERE possede.id_objet IS NULL;
 
--- Classement des joueurs détérminé par leurs expériences
+-- Classement des joueurs détérminé par leurs expériences OK
 CREATE OR REPLACE VIEW vw_joueur_classement AS
 SELECT joueur.*
 FROM joueur

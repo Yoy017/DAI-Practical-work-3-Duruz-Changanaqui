@@ -2,6 +2,7 @@ package ch.heigvd.dai.controller;
 
 import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import ch.heigvd.dai.model.entity.Inventory;
+import ch.heigvd.dai.model.entity.Statistic;
 import ch.heigvd.dai.model.repository.ArmoryRepository;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -29,7 +30,7 @@ public class ArmoryController {
                 return;
             }
 
-            getInventoryFromPlayer(ctx, playerName);
+            getPlayerInfo(ctx, playerName);
         });
 
         app.post("/armory", ctx -> {
@@ -82,7 +83,7 @@ public class ArmoryController {
             return;
         }
 
-        getInventoryFromPlayer(ctx, player);
+        getPlayerInfo(ctx, player);
     }
 
     private void unequipItem(@NotNull Context ctx, int itemId) {
@@ -103,17 +104,19 @@ public class ArmoryController {
             return;
         }
 
-        getInventoryFromPlayer(ctx, player);
+        getPlayerInfo(ctx, player);
     }
 
-    public void getInventoryFromPlayer(Context ctx, String playerName) {
+    public void getPlayerInfo(Context ctx, String playerName) {
         Inventory inventory = armoryRepository.getInventoryFromPlayer(playerName);
         if (inventory == null) {
             ctx.status(404).result("Inventory not found for player: " + playerName);
             return;
         }
 
-        ctx.render(PAGE, Map.of("inventory", inventory, "playerName", playerName));
+        Statistic statistic = armoryRepository.getStatisticFromPlayer(playerName);
+
+        ctx.render(PAGE, Map.of("inventory", inventory, "statistic", statistic, "playerName", playerName));
     }
 
     public void deleteItemFromInventory(Context ctx, int itemId) {
@@ -133,6 +136,6 @@ public class ArmoryController {
             return;
         }
 
-        getInventoryFromPlayer(ctx, player);
+        getPlayerInfo(ctx, player);
     }
 }

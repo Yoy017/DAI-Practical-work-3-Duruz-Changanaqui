@@ -80,43 +80,8 @@ AFTER INSERT ON Accepte
 FOR EACH ROW
 EXECUTE FUNCTION update_joueur_on_quete_insert();
 */
--- Trigger to update the statistics of a player when an object is removed from his inventory
-CREATE OR REPLACE FUNCTION update_joueur_statistics_on_object_delete()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE statistique
-    SET intelligence = (SELECT SUM(s.intelligence)
-                        FROM Slot sl
-                        JOIN Objet o ON sl.id_objet = o.id
-                        JOIN Statistique s ON o.id_statistique = s.id
-                        WHERE sl.id_inventaire = OLD.id_inventaire),
-        agilite = (SELECT SUM(s.agilite)
-                   FROM Slot sl
-                   JOIN Objet o ON sl.id_objet = o.id
-                   JOIN Statistique s ON o.id_statistique = s.id
-                   WHERE sl.id_inventaire = OLD.id_inventaire),
-        force = (SELECT SUM(s.force)
-                 FROM Slot sl
-                 JOIN Objet o ON sl.id_objet = o.id
-                 JOIN Statistique s ON o.id_statistique = s.id
-                 WHERE sl.id_inventaire = OLD.id_inventaire),
-        endurance = (SELECT SUM(s.endurance)
-                     FROM Slot sl
-                     JOIN Objet o ON sl.id_objet = o.id
-                     JOIN Statistique s ON o.id_statistique = s.id
-                     WHERE sl.id_inventaire = OLD.id_inventaire)
-    WHERE id = OLD.id_inventaire;
-    RETURN OLD;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trg_update_joueur_statistics_on_object_delete
-AFTER DELETE ON Slot
-FOR EACH ROW
-EXECUTE FUNCTION update_joueur_statistics_on_object_delete();
-
--- Trigger to update the statistics of a player when an object is updated in his inventory
-create function update_joueur_statistics() returns trigger
+-- Trigger to update the statistics of a player when an object is updated in his inventory OK
+create function update_player_statistic() returns trigger
     language plpgsql
 as
 $$
@@ -126,31 +91,31 @@ BEGIN
                         FROM Slot sl
                         JOIN Objet o ON sl.id_objet = o.id
                         JOIN Statistique s ON o.id_statistique = s.id
-                        WHERE sl.id_inventaire = NEW.id_inventaire),
+                        WHERE sl.id_inventaire = NEW.id_inventaire AND sl.type = 'Equipement'),
         agilite = (SELECT SUM(s.agilite)
                    FROM Slot sl
                    JOIN Objet o ON sl.id_objet = o.id
                    JOIN Statistique s ON o.id_statistique = s.id
-                   WHERE sl.id_inventaire = NEW.id_inventaire),
+                   WHERE sl.id_inventaire = NEW.id_inventaire AND sl.type = 'Equipement'),
         force = (SELECT SUM(s.force)
                  FROM Slot sl
                  JOIN Objet o ON sl.id_objet = o.id
                  JOIN Statistique s ON o.id_statistique = s.id
-                 WHERE sl.id_inventaire = NEW.id_inventaire),
+                 WHERE sl.id_inventaire = NEW.id_inventaire AND sl.type = 'Equipement'),
         endurance = (SELECT SUM(s.endurance)
                      FROM Slot sl
                      JOIN Objet o ON sl.id_objet = o.id
                      JOIN Statistique s ON o.id_statistique = s.id
-                     WHERE sl.id_inventaire = NEW.id_inventaire)
+                     WHERE sl.id_inventaire = NEW.id_inventaire AND sl.type = 'Equipement')
     WHERE id = NEW.id_inventaire;
     RETURN NEW;
 END;
 $$;
 
-CREATE TRIGGER trg_update_joueur_statistics
-AFTER INSERT ON Slot
+CREATE TRIGGER trg_update_player_statistic
+AFTER UPDATE ON Slot
 FOR EACH ROW
-EXECUTE FUNCTION update_joueur_statistics();
+EXECUTE FUNCTION update_player_statistic();
 
 -- Trigger to automatically create an inventory for a new player
 CREATE OR REPLACE FUNCTION create_inventory_for_new_player() RETURNS TRIGGER AS $$
