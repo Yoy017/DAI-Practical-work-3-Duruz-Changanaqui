@@ -29,8 +29,8 @@ public class ArmoryRepository {
                     inventory.addSlot(
                             new Slot(rs.getString("type_slot"),
                             new Item(
-                                    rs.getInt("id_inventaire"),
-                                    rs.getString("nom_objet"),
+                                    rs.getInt("id"),
+                                    rs.getString("nom"),
                                     rs.getString("description"),
                                     rs.getString("nom_type"),
                                     rs.getString("nom_rarete"),
