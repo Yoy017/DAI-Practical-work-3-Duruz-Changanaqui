@@ -21,7 +21,7 @@ La présentation doit couvrir:
 ** Synthèse des fonctionnalités implémentées (ou non)
 ** Conclusion
 
-*Mettez à jour le lien ci-après pour pointer vers vos slides: link:slides.pdf[Mes slides].*
+*Mettez à jour le lien ci-après pour pointer vers vos slides: link:PresentationBDR.pdf[Mes slides].*
 
 
 
