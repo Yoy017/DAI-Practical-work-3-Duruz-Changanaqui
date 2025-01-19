@@ -153,7 +153,7 @@ ALTER TABLE Joueur
 ADD CONSTRAINT FK_Joueur_Inventaire FOREIGN KEY (id_inventaire) REFERENCES Inventaire(id) ON DELETE CASCADE;
 
 ALTER TABLE Accepte
-ADD CONSTRAINT FK_Accepte_Quete FOREIGN KEY (nom_quete) REFERENCES Quete(nom);
+ADD CONSTRAINT FK_Accepte_Quete FOREIGN KEY (nom_quete) REFERENCES Quete(nom) ON DELETE CASCADE;
 
 ALTER TABLE Accepte
 ADD CONSTRAINT FK_Accepte_Joueur FOREIGN KEY (nom_joueur) REFERENCES Joueur(nom) ON DELETE CASCADE;
@@ -183,7 +183,7 @@ ALTER TABLE Recompense
 ADD CONSTRAINT FK_Recompense_Objet FOREIGN KEY (id_objet) REFERENCES Objet(id);
 
 ALTER TABLE Recompense
-ADD CONSTRAINT FK_Recompense_Quete FOREIGN KEY (nom_quete) REFERENCES Quete(nom);
+ADD CONSTRAINT FK_Recompense_Quete FOREIGN KEY (nom_quete) REFERENCES Quete(nom) ON DELETE CASCADE;
 
 -- Quete
 ALTER TABLE Quete
