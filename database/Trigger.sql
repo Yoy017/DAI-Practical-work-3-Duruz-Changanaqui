@@ -125,12 +125,11 @@ BEGIN
       ));
 END;
 $$;
---Used
+--Check des dépendences des quête du joueur
 CREATE OR REPLACE FUNCTION check_and_delete_dependent_quest() 
 RETURNS TRIGGER AS
 $$
 BEGIN
-    -- Rechercher toutes les quêtes qui ont la quête supprimée comme "nom_quete_requise"
     DELETE FROM Accepte
     WHERE nom_quete IN (
         SELECT nom
@@ -138,8 +137,6 @@ BEGIN
         WHERE nom_quete_requise = OLD.nom_quete
     )
     AND nom_joueur = OLD.nom_joueur;
-
-    -- Retourner l'ancienne ligne (pour compléter la fonction trigger)
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
