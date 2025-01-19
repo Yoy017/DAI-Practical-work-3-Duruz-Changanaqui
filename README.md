@@ -9,7 +9,7 @@ Suivez toutes ces étpes pour avoir notre application fonctionnel.
   git clone https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git
   ```
 
-2. Importez la BDD en suivant l'ordre d'exécution des scripts suivant (les scripts se retrouvent dans /database/*.sql) :
+2. Importez la BDD en suivant l'ordre d'exécution des scripts suivant (les scripts se retrouvent dans /database/scripts/*.sql) :
   - delete.sql
   - create_database.sql
   - insert.sql
