@@ -31,55 +31,7 @@ CREATE TRIGGER trg_update_joueur_solde
 AFTER INSERT ON Recompense
 FOR EACH ROW
 EXECUTE FUNCTION update_joueur_solde();
-/*
--- Trigger to update nom_quete in Joueur when a Quete is deleted
-CREATE OR REPLACE FUNCTION update_joueur_on_quete_delete()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE Joueur
-    SET nom_quete = NULL
-    WHERE nom_quete = OLD.nom;
-    RETURN OLD;
-END;
-$$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_update_joueur_on_quete_delete
-BEFORE DELETE ON Quete
-FOR EACH ROW
-EXECUTE FUNCTION update_joueur_on_quete_delete();
-
--- Trigger to update nom_quete in Joueur when a Quete is updated
-CREATE OR REPLACE FUNCTION update_joueur_on_quete_update()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE Joueur
-    SET nom_quete = NEW.nom
-    WHERE nom_quete = OLD.nom;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trg_update_joueur_on_quete_update
-AFTER UPDATE ON Quete
-FOR EACH ROW
-EXECUTE FUNCTION update_joueur_on_quete_update();
-
--- Trigger to update nom_quete in Joueur when a Quete is inserted
-CREATE OR REPLACE FUNCTION update_joueur_on_quete_insert()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE Joueur
-    SET nom_quete = NEW.nom
-    WHERE nom = NEW.nom_joueur;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trg_update_joueur_on_quete_insert
-AFTER INSERT ON Accepte
-FOR EACH ROW
-EXECUTE FUNCTION update_joueur_on_quete_insert();
-*/
 -- Trigger to update the statistics of a player when an object is updated in his inventory OK
 create function update_player_statistic() returns trigger
     language plpgsql

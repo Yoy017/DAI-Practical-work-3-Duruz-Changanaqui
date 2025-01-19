@@ -62,10 +62,29 @@ FROM joueur
 GROUP BY joueur.nom, experience
 ORDER BY experience DESC;
 
+-- Lister les personnages joueurs ou non-joueur
+CREATE OR REPLACE VIEW vw_personnages AS
+SELECT 'Joueur' AS type_personnage, nom, NULL AS type_pnj
+FROM Joueur
+UNION ALL
+SELECT 'PNJ' AS type_personnage, nom, type AS type_pnj
+FROM PNJ;
 
--- Vue pour lister tous les PNJ avec les quêtes qu'ils proposent
--- CREATE VIEW vw_pnj_quete AS
--- SELECT p.nom AS nom_pnj, q.nom AS nom_quete, q.description, q.niveauRequis, q.dateDebut, q.dateFin, q.type
--- FROM PNJ p
--- JOIN Propose pr ON p.nom = pr.nom_pnj
--- JOIN Quete q ON pr.nom_quete = q.nom;
+-- Permettre de voir le taux de joueurs d'une certaine classe
+CREATE OR REPLACE VIEW vw_taux_joueurs_par_classe AS
+SELECT classe, COUNT(*) AS nombre_joueurs,
+       ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM Joueur), 2) AS pourcentage
+FROM Joueur
+GROUP BY classe;
+
+--Trouver l'avancée de tous les joueurs dans l'histoire (basée sur les quêtes principales complétées)
+CREATE OR REPLACE VIEW vw_progression_histoire_joueurs AS
+SELECT 
+    j.nom AS joueur,
+    COALESCE(COUNT(q.nom), 0) AS quetes_principales_completees,
+    (SELECT COUNT(*) FROM Quete WHERE type = 'Principale') AS quetes_principales_totales,
+    COALESCE(ROUND(COUNT(q.nom)::DECIMAL / NULLIF((SELECT COUNT(*) FROM Quete WHERE type = 'Principale'), 0) * 100, 2),0) AS progression_pourcentage
+FROM Joueur j
+LEFT JOIN Accepte a ON j.nom = a.nom_joueur AND a.complete = TRUE
+LEFT JOIN Quete q ON a.nom_quete = q.nom AND q.type = 'Principale' -- Filtre sur les quêtes principales
+GROUP BY j.nom;
