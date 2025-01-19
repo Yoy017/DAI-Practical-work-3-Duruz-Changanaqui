@@ -74,7 +74,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>ch.heigvd.dai.DatabaseTest</mainClass>
+                                    <mainClass>ch.heigvd.dai.DatabaseRenderingTest</mainClass>
                                 </transformer>                    <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
                                 <resource>MANIFEST.MF</resource>
                             </transformer>
