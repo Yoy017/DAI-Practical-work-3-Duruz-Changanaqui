@@ -42,7 +42,7 @@ Le rapport doit contenir:
 * La contribution des différents membres de l'équipe
 * Quelques capture d'écran des différentes interface de l'application
 
-*Mettez à jour le lien ci-après pour pointer vers votre rapport: link:report.asciidoc[Mon rapport].*
+*Mettez à jour le lien ci-après pour pointer vers votre rapport: link:RapportBDR.pdf[Mon rapport].*
 
 
 == Phases précédentes mise à jour
