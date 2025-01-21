@@ -30,6 +30,12 @@ Suivez toutes ces étpes pour avoir notre application fonctionnel.
    ./mvnw package
    java -jar target/MMO_Project-1.0-SNAPSHOT.jar
    ```
+   ou alors,
+   ```sh
+   docker pull ghcr.io/yoy017/mmo_project:latest
+   
+   docker run --rm -it mmo_project
+   ```
 ![image](https://github.com/user-attachments/assets/630061c3-cb33-4cc9-9c09-48b3ccfd26f3)
 
 Maintenant l'application tourne ainsi que le serveur PostgreSQL. Vous pouvez dorénavant accéder à notre application depuis [localhost:8080](localhost:8080).
