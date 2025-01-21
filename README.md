@@ -60,4 +60,21 @@ L'application possède la structure suivante en suivant le modèle MVC pour la g
 - Fournit des méthodes pour accéder et manipuler les entités stockées dans la base de données.
 
 Le fichier **Dockerfile** définit l'image Docker utilisée pour exécuter l'application. Déclare la commande pour lancer le programme Java.
+
 Le fichier **docker-compose.yml** configure le service PostgreSQL utilisé pour la base de données, en définissant les variables d'environnement, les ports d'accès, et le réseau Docker pour permettre la communication entre les services.
+
+# Application protocol interface _(API)_
+Vous pouvez retrouvez la description de notre API dans le fichier [api.md](./api.md)
+
+# Virtual machine
+Configurons la machine virtuelle.
+
+1.
+
+# DNS
+Configurons notre DNS zone pour pouvoir accéder à l'application web.
+
+1.
+
+# Examples using curl
+...
