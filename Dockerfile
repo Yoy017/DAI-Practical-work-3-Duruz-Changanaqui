@@ -7,5 +7,8 @@ WORKDIR /app
 # Copier le fichier JAR dans le conteneur
 COPY target/MMO_Project-1.0-SNAPSHOT.jar /app/MMO_Project-1.0-SNAPSHOT.jar
 
+# Copier les fichiers de ressources dans le conteneur
+COPY src/main/resources/view /app/src/main/resources/view
+
 # Commande pour exécuter le programme Java
 ENTRYPOINT ["java", "-jar", "/app/MMO_Project-1.0-SNAPSHOT.jar"]
