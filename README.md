@@ -4,37 +4,32 @@
 ## Get Started
 Suivez toutes ces étpes pour avoir notre application fonctionnel.
 
+### Using docker
+
+### Without docker version
 1. Clonez le repository sur [github](https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git)
   ```sh
   git clone https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git
   ```
 
-2. Importez la BDD en suivant l'ordre d'exécution des scripts suivant (les scripts se retrouvent dans /database/scripts/*.sql) :
-  - delete.sql
-  - create_database.sql
-  - insert.sql
-  - Trigger.sql
-  - View.sql
+2. Importez la BDD en suivant l'ordre d'exécution des scripts suivant (les scripts se retrouvent dans /BDR/scripts/*.sql) :
+  - **create_database.sql** *(éventuellement **delete.sql** si la base de données existe déjà)*
+  - **insert.sql**
+  - **Trigger.sql**
+  - **View.sql**
 
 3. Démarrez le serveur PostgreSQL
    ```sh
-   # La première fois
-   docker compose up -d
-
-   # Par la suite
-   docker compose start
+   docker compose -f postgre-sql-server.yml up
    ```
    
 4. Démarrez l'application
    ```sh
+   # Package l'application
    ./mvnw package
-   java -jar target/MMO_Project-1.0-SNAPSHOT.jar
-   ```
-   ou alors,
-   ```sh
-   docker pull ghcr.io/yoy017/mmo_project:latest
    
-   docker run --rm -it mmo_project
+   # Exécute l'application
+   java -jar target/MMO_Project-1.0-SNAPSHOT.jar
    ```
 ![image](https://github.com/user-attachments/assets/630061c3-cb33-4cc9-9c09-48b3ccfd26f3)
 
@@ -64,7 +59,7 @@ Le fichier **Dockerfile** définit l'image Docker utilisée pour exécuter l'app
 Le fichier **docker-compose.yml** configure le service PostgreSQL utilisé pour la base de données, en définissant les variables d'environnement, les ports d'accès, et le réseau Docker pour permettre la communication entre les services.
 
 # Application protocol interface _(API)_
-Vous pouvez retrouvez la description de notre API dans le fichier [api.md](./api.md)
+Vous pouvez retrouvez la description de notre API dans le fichier [api.md](./api.md).
 
 # Virtual machine
 Configurons la machine virtuelle.
