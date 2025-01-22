@@ -20,18 +20,17 @@ services:
       timeout: 10s
       retries: 10
     volumes:
-      - ./BDR/scripts/delete.sql:/docker-entrypoint-initdb.d/delete.sql
-      - ./BDR/scripts/create_database.sql:/docker-entrypoint-initdb.d/create_database.sql
-      - ./BDR/scripts/Trigger.sql:/docker-entrypoint-initdb.d/Trigger.sql
-      - ./BDR/scripts/View.sql:/docker-entrypoint-initdb.d/View.sql
-      - ./BDR/scripts/insert.sql:/docker-entrypoint-initdb.d/insert.sql
+        - ./BDR/scripts/create_database.sql:/docker-entrypoint-initdb.d/01_create_database.sql
+        - ./BDR/scripts/Trigger.sql:/docker-entrypoint-initdb.d/02_Trigger.sql
+        - ./BDR/scripts/View.sql:/docker-entrypoint-initdb.d/03_View.sql
+        - ./BDR/scripts/insert.sql:/docker-entrypoint-initdb.d/04_insert.sql
     networks:
       - bdr-net
 
   app:
+    image: ghcr.io/yoy017/mmo-project:latest
     build:
       context: .
-      dockerfile: Dockerfile
     container_name: mmo_project
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/bdr

@@ -1,10 +1,11 @@
 -- VIEWS
+SET SEARCH_PATH = mmo_game;
 
 -- Vue pour lister toutes les statistiques des joueurs OK
 CREATE VIEW vw_joueurs_statistiques AS
-SELECT joueur.nom AS nom_joueur, s.* FROM joueur
+SELECT j.nom AS nom_joueur, s.* FROM Joueur j
     INNER JOIN statistique s
-    ON joueur.id_statistique = s.id;
+    ON j.id_statistique = s.id;
 
 -- Vue pour lister toutes les quêtes avec les joueurs qui les ont acceptées et leurs récompenses
 CREATE VIEW vw_quete_joueur_recompense AS
@@ -56,7 +57,7 @@ WHERE possede.id_objet IS NULL;
 -- Classement des joueurs détérminé par leurs expériences OK
 CREATE OR REPLACE VIEW vw_joueur_classement AS
 SELECT joueur.*
-FROM joueur
+FROM Joueur
     INNER JOIN statistique
     ON joueur.id_statistique = statistique.id
 GROUP BY joueur.nom, experience

@@ -34,7 +34,6 @@
             <tbody>
             @if(players != null)
             @for(Player player : players)
-            @if(player != null)
                 <tr>
                     <td><a href="/armory?player=${player.getName()}" class="text-decoration-none">${player.getName()}</a></td>
                     <td>${player.getExperience()}</td>
@@ -48,7 +47,6 @@
                         </form>
                     </td>
                 </tr>
-            @endif
             @endfor
             @endif
             </tbody>

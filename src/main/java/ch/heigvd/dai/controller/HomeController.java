@@ -18,7 +18,7 @@ public class HomeController {
     public HomeController(Javalin app, PostgresDatabaseConnection databaseProvider) {
         this.database = databaseProvider;
         this.homeRepository = new HomeRepository(databaseProvider);
-        app.get(URL, ctx -> ctx.status(200).render(PAGE));
+        app.get(URL, ctx -> getAllPlayers(ctx));
         app.post("/delete-player", this::deletePlayer);
     }
 

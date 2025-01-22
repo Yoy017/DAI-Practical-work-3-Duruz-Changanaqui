@@ -5,6 +5,20 @@
 Suivez toutes ces étpes pour avoir notre application fonctionnel.
 
 ### Using docker
+1. Clonez le repository sur [github](https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git) (pour récupérer les .sql et vues nécessaires)
+  ```sh
+  git clone https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git
+  ```
+
+2.Récupérer l'image de l'application
+   ```sh
+    docker pull ghcr.io/yoy017/mmo-project:latest
+   ```
+   
+3.Utilisez le fichier **docker-compose.yml** pour démarrer les services de l'application et de la base de données PostgreSQL (depuis la racine du projet).
+   ```sh
+   docker compose up
+   ```
 
 ### Without docker version
 1. Clonez le repository sur [github](https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git)
@@ -33,7 +47,7 @@ Suivez toutes ces étpes pour avoir notre application fonctionnel.
    ```
 ![image](https://github.com/user-attachments/assets/630061c3-cb33-4cc9-9c09-48b3ccfd26f3)
 
-Maintenant l'application tourne ainsi que le serveur PostgreSQL. Vous pouvez dorénavant accéder à notre application depuis [localhost:8080](localhost:8080).
+Maintenant l'application tourne ainsi que le serveur PostgreSQL. Vous pouvez dorénavant accéder à notre application depuis [localhost:8080](http://localhost:8080).
 
 ## Structure des Fichiers
 L'application possède la structure suivante en suivant le modèle MVC pour la gestion avec la BDD.

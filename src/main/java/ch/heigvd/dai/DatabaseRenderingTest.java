@@ -21,7 +21,7 @@ public class DatabaseRenderingTest {
         });
 
         // Initialisation de la connexion à la base de données
-        PostgresDatabaseConnection conn = new PostgresDatabaseConnection("jdbc:postgresql://postgresql:5432/bdr", "bdr", "bdr");
+        PostgresDatabaseConnection conn = new PostgresDatabaseConnection("jdbc:postgresql://database:5432/bdr", "bdr", "bdr");
 
         // Initialisation des repository, services et contrôleurs
         HomeController homeController = new HomeController(app, conn);
