@@ -76,9 +76,19 @@ Le fichier **docker-compose.yml** configure le service PostgreSQL utilisé pour 
 Vous pouvez retrouvez la description de notre API dans le fichier [api.md](./api.md).
 
 # Virtual machine
-Configurons la machine virtuelle.
+Configurons la machine virtuelle ensemble.
 
-1.
+1. Créer ou connecter vous une machine virtuelle [Azure](https://portal.azure.com/).
+2. Créer une nouvelle machine virtuelle avec les configurations suivantes :
+   - **Resource group**: Créer un nouveau groupe de ressources
+   - **Virtual machine name**: Nom de la machine virtuelle
+   - **Region**: Région de la machine virtuelle
+   - **Image**: Ubuntu Server 20.04 LTS
+   - **Size**: Standard B1s
+   - **Authentication type**: SSH public key
+   - **Username**: Nom d'utilisateur
+   - **SSH public key**: Clé publique SSH
+   - **Inbound port rules**: Autoriser le trafic entrant sur les ports 22 et 8080
 
 # DNS
 Configurons notre DNS zone pour pouvoir accéder à l'application web.

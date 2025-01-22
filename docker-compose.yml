@@ -1,8 +1,28 @@
 networks:
   bdr-net:
     driver: bridge
+  web:   # Nouveau réseau pour Traefik et les services web
 
 services:
+  traefik:
+    image: traefik:v2.9
+    command:
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web"  # Utilisation du challenge HTTP pour Let's Encrypt
+      - "--certificatesresolvers.myresolver.acme.email=yoann.changanaqui@heig-vd.ch"
+      - "--certificatesresolvers.myresolver.acme.storage=/acme.json"
+    ports:
+      - "80:80"    # Trafic HTTP
+      - "443:443"  # Trafic HTTPS
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Permet à Traefik de communiquer avec Docker
+      - "./acme.json:/acme.json"  # Stockage des certificats SSL
+    networks:
+      - web
+
+  # PostgreSQL service
   database:
     image: postgres:latest
     container_name: mmo_project_db
@@ -15,18 +35,20 @@ services:
     ports:
       - 5432:5432
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U bdr -d bdr"]
+      test: [ "CMD-SHELL", "pg_isready -U bdr -d bdr" ]
       interval: 3s
       timeout: 10s
       retries: 10
     volumes:
-        - ./BDR/scripts/create_database.sql:/docker-entrypoint-initdb.d/01_create_database.sql
-        - ./BDR/scripts/Trigger.sql:/docker-entrypoint-initdb.d/02_Trigger.sql
-        - ./BDR/scripts/View.sql:/docker-entrypoint-initdb.d/03_View.sql
-        - ./BDR/scripts/insert.sql:/docker-entrypoint-initdb.d/04_insert.sql
+      - ./scripts/create_database.sql:/docker-entrypoint-initdb.d/01_create_database.sql
+      - ./scripts/Trigger.sql:/docker-entrypoint-initdb.d/02_Trigger.sql
+      - ./scripts/View.sql:/docker-entrypoint-initdb.d/03_View.sql
+      - ./scripts/insert.sql:/docker-entrypoint-initdb.d/04_insert.sql
     networks:
       - bdr-net
+      - web   # Connecté aussi à Traefik réseau
 
+  # Votre application web
   app:
     image: ghcr.io/yoy017/mmo-project:latest
     build:
@@ -41,7 +63,12 @@ services:
     depends_on:
       database:
         condition: service_healthy
-    links:
-      - database
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mmo_project.rule=Host(`whoami.mmoproject.duckdns.org`)"
+      - "traefik.http.services.mmo_project.loadbalancer.server.port=8080"
+      - "traefik.http.routers.mmo_project.entrypoints=websecure"
+      - "traefik.http.routers.mmo_project.tls.certresolver=myresolver"
     networks:
       - bdr-net
+      - web   # Connecté aussi à Traefik réseau
