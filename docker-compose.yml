@@ -1,26 +1,36 @@
+version: "3.8"
+
 networks:
   bdr-net:
     driver: bridge
   web:   # Nouveau réseau pour Traefik et les services web
 
 services:
+  # Traefik service
   traefik:
     image: traefik:v2.9
     command:
+      - "--api.insecure=true"  # Active le tableau de bord (non sécurisé pour le développement)
       - "--providers.docker=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web"  # Utilisation du challenge HTTP pour Let's Encrypt
+      - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web"
       - "--certificatesresolvers.myresolver.acme.email=yoann.changanaqui@heig-vd.ch"
       - "--certificatesresolvers.myresolver.acme.storage=/acme.json"
     ports:
-      - "80:80"    # Trafic HTTP
-      - "443:443"  # Trafic HTTPS
+      - "80:80"
+      - "443:443"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"  # Permet à Traefik de communiquer avec Docker
-      - "./acme.json:/acme.json"  # Stockage des certificats SSL
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./acme.json:/acme.json"
     networks:
       - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik-dashboard.rule=Host(`traefik.mmoproject.duckdns.org`)"  # Sous-domaine pour le dashboard
+      - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
+      - "traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver"
+      - "traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080"  # Port du tableau de bord
 
   # PostgreSQL service
   database:
@@ -35,7 +45,7 @@ services:
     ports:
       - 5432:5432
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U bdr -d bdr" ]
+      test: ["CMD-SHELL", "pg_isready -U bdr -d bdr"]
       interval: 3s
       timeout: 10s
       retries: 10
@@ -65,10 +75,15 @@ services:
         condition: service_healthy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mmo_project.rule=Host(`whoami.mmoproject.duckdns.org`)"
+      - "traefik.http.routers.mmo_project.rule=Host(`whoami.mmoproject.duckdns.org`)"  # Nom de domaine complet
       - "traefik.http.services.mmo_project.loadbalancer.server.port=8080"
       - "traefik.http.routers.mmo_project.entrypoints=websecure"
-      - "traefik.http.routers.mmo_project.tls.certresolver=myresolver"
+      - "traefik.http.routers.mmo_project.tls.certresolver=myresolver"  # TLS via Let's Encrypt
     networks:
       - bdr-net
       - web   # Connecté aussi à Traefik réseau
+
+# Volumes
+volumes:
+  postgres_data:
+    external: true
