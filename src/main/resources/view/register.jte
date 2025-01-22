@@ -27,6 +27,10 @@
         @for(String className : classes)
         <option value="${className}">${className}</option>
         @endfor
+        @if(classes.isEmpty())
+        <option value="warrior">Warrior</option>
+        <option value="mage">Mage</option>
+        @endif
     </select>
     <br><br>
 

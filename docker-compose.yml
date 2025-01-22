@@ -1,30 +1,48 @@
-version: '3.8'
 networks:
   bdr-net:
     driver: bridge
 
 services:
-  postgresql:
-    image: 'bitnami/postgresql:17'
-    container_name: bdr-postgresql
+  database:
+    image: postgres:latest
+    container_name: mmo_project_db
+    restart: always
     environment:
-      - POSTGRESQL_USERNAME=bdr
-      - POSTGRESQL_PASSWORD=bdr
-      - POSTGRESQL_DATABASE=bdr
-      - POSTGRESQL_POSTGRES_PASSWORD=root
+      POSTGRES_DB: bdr
+      POSTGRES_USER: bdr
+      POSTGRES_PASSWORD: bdr
+      POSTGRES_ROOT_PASSWORD: root
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bdr -d bdr"]
+      interval: 3s
+      timeout: 10s
+      retries: 10
     volumes:
-      - .:/data:ro
+      - ./BDR/scripts/delete.sql:/docker-entrypoint-initdb.d/delete.sql
+      - ./BDR/scripts/create_database.sql:/docker-entrypoint-initdb.d/create_database.sql
+      - ./BDR/scripts/Trigger.sql:/docker-entrypoint-initdb.d/Trigger.sql
+      - ./BDR/scripts/View.sql:/docker-entrypoint-initdb.d/View.sql
+      - ./BDR/scripts/insert.sql:/docker-entrypoint-initdb.d/insert.sql
     networks:
       - bdr-net
 
   app:
-    image: ghcr.io/yoy017/mmo_project:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: mmo_project
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/bdr
+      SPRING_DATASOURCE_USERNAME: bdr
+      SPRING_DATASOURCE_PASSWORD: bdr
     ports:
       - "8080:8080"
     depends_on:
-      - postgresql
+      database:
+        condition: service_healthy
+    links:
+      - database
     networks:
       - bdr-net
