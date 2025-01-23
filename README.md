@@ -14,7 +14,7 @@ Suivez toutes ces étapes pour avoir notre application fonctionnelle.
    git clone https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git
    ```
    
-*Cette étape permet de récupéré le fichier docker-compose.yml*
+*Cette étape permet de récupéré le fichier docker-compose.yml et les scripts sql (le projet n'est pas nécessaire)*
 
 2. Récupérer l'image de l'application.
 
@@ -48,7 +48,7 @@ Vous pouvez désormais accéder à la page d'accueil de l'application depuis [mm
     - **Trigger.sql**
     - **View.sql**
 
-3. Démarrez le serveur PostgreSQL.
+3. Démarrez le serveur PostgreSQL de bitnami.
 
    ```sh
    docker compose -f postgre-sql-server.yml up
