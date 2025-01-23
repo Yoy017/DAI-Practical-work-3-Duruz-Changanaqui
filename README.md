@@ -153,7 +153,7 @@ Cela permettra à votre application d'être accessible via votre sous-domaine Du
 
 ![img_2.png](img/img_2.png)
 
-![img.png](img/allSetup.png)
+![img.png](img/allSetUp.png)
 
 ## Examples Using CURL
 
