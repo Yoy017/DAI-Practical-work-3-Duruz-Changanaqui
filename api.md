@@ -103,68 +103,51 @@ Display all classes available
 #### Example `curl` command:
 ```bash
 curl -X GET http://localhost:8080/register \
-    -d "name=Name"
+    -d '{"name":"NomDuJoueur","profession":"ProfessionDuJoueur"}'
 ```
 
 #### Request
 
-The request body is empty.
-
-#### Response
-
-The response body contains a JSON object with the following properties:
-
-- `id` - The unique identifier of the character
-- `name` - The name of the character
-- `profession` - The profession of the character
+- `name` - Name of the player
+- `profession` - Class of the player
 
 #### Status codes
 
-- `200` (OK) - The character has been successfully retrieved
-- `401` (Unauthorized) - The character is not logged in
+- `200` (OK) - The character has been successfully created
+- `400` (Bad Request) - Character name already exist
 
-### Get character inventory
+### Register new Character
 
-- `GET /characters/{id}/inventory`
+- `POST /register/{name}/{profession}`
 
-Get the inventory of a character by its ID.
+#### Example `curl` command:
+```bash
+curl -v -X POST http://localhost:8080/register/MyName/Guerrier
+```
 
 #### Request
 
-The request path must contain the ID of the character.
-
-#### Response
-
-The response body contains a JSON object with the following properties:
-
-- `slots` - A list of slots in the inventory, each containing:
-    - `type` - The type of the slot (e.g., "Bag", "Equipment")
-    - `item` - The item in the slot, with the following properties:
-        - `id` - The unique identifier of the item
-        - `name` - The name of the item
-        - `description` - The description of the item
-        - `type` - The type of the item
-        - `rarity` - The rarity of the item
-        - `requiredLevel` - The required level to use the item
+- `name` - Name of the player
+- `profession` - Class of the player
 
 #### Status codes
 
-- `200` (OK) - The inventory has been successfully retrieved
-- `404` (Not Found) - The character does not exist
+- `200` (OK) - The character has been successfully created
+- `400` (Bad Request) - Character name already exist
 
-### Add item to inventory
+### Accept Quest
 
-- `POST /characters/{id}/inventory`
+- `PATCH /quest/accept/{playerName}/{questName}`
 
-Add an item to the inventory of a character by its ID.
+#### Example `curl` command:
+```bash
+curl -v -X PATCH http://localhost:8080/quest/accept/EvilSoul/Friend%20of%20zanahorias
+```
 
 #### Request
 
-The request path must contain the ID of the character.
-
-The request body must contain a JSON object with the following properties:
-
-- `itemId` - The ID of the item to add
+The request path must contain the name of the character.
+The request path must contain the name of the quest.
 
 #### Response
 
@@ -172,23 +155,22 @@ The response body is empty.
 
 #### Status codes
 
-- `204` (No Content) - The item has been successfully added to the inventory
-- `400` (Bad Request) - The request body is invalid
-- `404` (Not Found) - The character or item does not exist
+- `200` (OK) - The quest has been accepted
+- `404` (Not Found) - The character or quest does not exist
 
-### Equip item
+### Complete Quest
 
-- `PUT /characters/{id}/inventory/equip`
+- `PATCH /quest/complete/{playerName}/{questName}`
 
-Equip an item from the inventory of a character by its ID.
+#### Example `curl` command:
+```bash
+curl -v -X PATCH http://localhost:8080/quest/complete/EvilSoul/Friend%20of%20zanahorias
+```
 
 #### Request
 
-The request path must contain the ID of the character.
-
-The request body must contain a JSON object with the following properties:
-
-- `itemId` - The ID of the item to equip
+The request path must contain the name of the character.
+The request path must contain the name of the quest.
 
 #### Response
 
@@ -196,23 +178,21 @@ The response body is empty.
 
 #### Status codes
 
-- `204` (No Content) - The item has been successfully equipped
-- `400` (Bad Request) - The request body is invalid
-- `404` (Not Found) - The character or item does not exist
+- `200` (OK) - Quest completed
+- `404` (Not Found) - The character or Quest does not exist
 
-### Unequip item
+### Delete Quest From Journal
 
-- `PUT /characters/{id}/inventory/unequip`
+- `DELETE /quest/{playerName}/{questName}`
 
-Unequip an item from the inventory of a character by its ID.
-
+#### Example `curl` command:
+```bash
+curl -v -X DELETE http://localhost:8080/quest/EvilSoul/Friend%20of%20zanahorias
+```
 #### Request
 
-The request path must contain the ID of the character.
-
-The request body must contain a JSON object with the following properties:
-
-- `itemId` - The ID of the item to unequip
+The request path must contain the name of the character.
+The request path must contain the name of the quest.
 
 #### Response
 
@@ -220,9 +200,8 @@ The response body is empty.
 
 #### Status codes
 
-- `204` (No Content) - The item has been successfully unequipped
-- `400` (Bad Request) - The request body is invalid
-- `404` (Not Found) - The character or item does not exist
+- `200` (OK) - The quest has been successfully deleted
+- `404` (Not Found) - The character or quest does not exist
 
 ### Delete item from inventory
 
