@@ -1,20 +1,80 @@
-version: '3.8'
 networks:
   bdr-net:
     driver: bridge
+  web:
 
 services:
-  postgresql:
-    image: 'bitnami/postgresql:17'
-    container_name: bdr-postgresql
+  traefik:
+    image: traefik:v2.9
+    container_name: traefik
+    restart: always
+    command:
+      - "--api=true" # Active l'API de Traefik (Tableau de bord)
+      - "--api.dashboard=true" # Tableau de bord accessible
+      - "--providers.docker=true" # Active les labels Docker
+      - "--entrypoints.web.address=:80" # HTTP
+      - "--entrypoints.websecure.address=:443" # HTTPS
+      - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web" # Challenge HTTP pour TLS
+      - "--certificatesresolvers.myresolver.acme.email=yoann.changanaqui@heig-vd.ch" # Email pour Let’s Encrypt
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json" # Stockage des certificats
+    ports:
+      - "80:80" # HTTP
+      - "443:443" # HTTPS
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro" # Permet à Traefik de lire les services Docker
+      - "./letsencrypt:/letsencrypt" # Stockage des certificats
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      # Dashboard accessible via sous-domaine
+      - "traefik.http.routers.traefik-dashboard.rule=Host(`traefik.mmoproject.duckdns.org`)"
+      - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
+      - "traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver"
+      - "traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080"
+
+  database:
+    image: postgres:latest
+    container_name: mmo_project_db
+    restart: always
     environment:
-      - POSTGRESQL_USERNAME=bdr
-      - POSTGRESQL_PASSWORD=bdr
-      - POSTGRESQL_DATABASE=bdr
-      - POSTGRESQL_POSTGRES_PASSWORD=root
+      POSTGRES_DB: bdr
+      POSTGRES_USER: bdr
+      POSTGRES_PASSWORD: bdr
+      POSTGRES_ROOT_PASSWORD: root
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bdr -d bdr"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
     volumes:
-      - .:/data:ro
+      - ./scripts/create_database.sql:/docker-entrypoint-initdb.d/01_create_database.sql
+      - ./scripts/Trigger.sql:/docker-entrypoint-initdb.d/02_Trigger.sql
+      - ./scripts/View.sql:/docker-entrypoint-initdb.d/03_View.sql
+      - ./scripts/insert.sql:/docker-entrypoint-initdb.d/04_insert.sql
     networks:
       - bdr-net
+
+  app:
+    image: ghcr.io/yoy017/mmo-project:latest
+    container_name: mmo_project
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/bdr
+      SPRING_DATASOURCE_USERNAME: bdr
+      SPRING_DATASOURCE_PASSWORD: bdr
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    labels:
+      - "traefik.enable=true"
+      # Application accessible via domaine principal
+      - "traefik.http.routers.mmo_project.rule=Host(`mmoproject.duckdns.org`)"
+      - "traefik.http.routers.mmo_project.entrypoints=websecure"
+      - "traefik.http.routers.mmo_project.tls.certresolver=myresolver"
+      - "traefik.http.services.mmo_project.loadbalancer.server.port=8080"
+    networks:
+      - bdr-net
+      - web

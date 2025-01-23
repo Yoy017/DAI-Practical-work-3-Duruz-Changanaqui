@@ -1,23 +1,25 @@
+SET SEARCH_PATH = mmo_game;
+
 -- Insertion des statistiques
-INSERT INTO statistique(intelligence, agilite, force, endurance)
+INSERT INTO Statistique(intelligence, agilite, force, endurance)
 VALUES(1, 1, 1, 1);
 
-INSERT INTO statistique(intelligence, agilite, force, endurance)
+INSERT INTO Statistique(intelligence, agilite, force, endurance)
 VALUES(10, 10, 10, 10);
 
-INSERT INTO statistique(intelligence, agilite, force, endurance)
+INSERT INTO Statistique(intelligence, agilite, force, endurance)
 VALUES(20, 20, 20, 20);
 
-INSERT INTO statistique(intelligence, agilite, force, endurance)
+INSERT INTO Statistique(intelligence, agilite, force, endurance)
 VALUES(30, 30, 30, 30);
 
-INSERT INTO statistique(intelligence, agilite, force, endurance)
+INSERT INTO Statistique(intelligence, agilite, force, endurance)
 VALUES(40, 40, 40, 40);
 
-INSERT INTO statistique(intelligence, agilite, force, endurance)
+INSERT INTO Statistique(intelligence, agilite, force, endurance)
 VALUES(50, 50, 50, 50);
 
-INSERT INTO statistique(intelligence, agilite, force, endurance)
+INSERT INTO Statistique(intelligence, agilite, force, endurance)
 VALUES(60, 60, 60, 60);
 
 -- Insertion des quêtes

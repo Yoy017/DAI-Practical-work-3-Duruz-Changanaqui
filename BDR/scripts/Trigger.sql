@@ -1,4 +1,5 @@
 -- TRIGGERS
+SET SEARCH_PATH = mmo_game;
 
 -- Trigger to update experience in Joueur when a Recompense is added
 CREATE OR REPLACE FUNCTION update_joueur_experience()

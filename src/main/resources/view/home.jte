@@ -32,6 +32,7 @@
             </tr>
             </thead>
             <tbody>
+            @if(players != null)
             @for(Player player : players)
                 <tr>
                     <td><a href="/armory?player=${player.getName()}" class="text-decoration-none">${player.getName()}</a></td>
@@ -47,6 +48,7 @@
                     </td>
                 </tr>
             @endfor
+            @endif
             </tbody>
         </table>
     </div>
