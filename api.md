@@ -203,26 +203,109 @@ The response body is empty.
 - `200` (OK) - The quest has been successfully deleted
 - `404` (Not Found) - The character or quest does not exist
 
-### Delete item from inventory
+### Get Player Inventory
 
-- `DELETE /characters/{id}/inventory`
+- `GET /armory`
 
-Delete an item from the inventory of a character by its ID.
+#### Example `curl` command:
+```bash
+curl -X GET "http://localhost:8080/URL?player=EvilSoul"
+```
 
 #### Request
 
-The request path must contain the ID of the character.
-
-The request body must contain a JSON object with the following properties:
-
-- `itemId` - The ID of the item to delete
+The request path must contain the name of the character.
 
 #### Response
 
-The response body is empty.
+HTML of the player's equipements
 
 #### Status codes
 
-- `204` (No Content) - The item has been successfully deleted from the inventory
-- `400` (Bad Request) - The request body is invalid
-- `404` (Not Found) - The character or item does not exist
+- `200` (OK) - Player items retrieve
+
+### Player equipement Management
+
+- `POST /armory`
+
+#### Example `curl` command:
+Delete
+```bash
+curl -X POST http://localhost:8080/armory \
+  -d "_method=delete" \
+  -d "itemName=ItemToRemove"
+```
+Equip
+```bash
+curl -X POST http://localhost:8080/armory \
+  -d "_method=equip" \
+  -d "itemName=ItemToEquip"
+```
+
+Unequip
+```bash
+curl -X POST http://localhost:8080/armory \
+  -d "_method=unequip" \
+  -d "itemName=ItemToUnequip"
+```
+
+#### Request
+
+Must contain the name of the method to use.
+Must contain the name of the item to manipulate.
+
+#### Response
+
+HTML of the player's equipements
+
+#### Status codes
+
+- `200` (OK) - Player items retrieve
+- `404` (NOT FOUND) - method or item not found
+
+### Add Item To Player Inventory
+
+- `POST /items`
+
+#### Example `curl` command:
+```bash
+curl -X POST http://localhost:8080/items \
+  -b "player=EvilSoul" \
+  -d "itemId=123"
+```
+
+#### Request
+
+Must Contain player name and item Id
+
+#### Response
+
+Empty Body
+
+#### Status codes
+
+- `200` (OK) - Player items retrieve
+- `404` (NOT FOUND) - player name or item id not found
+
+### Get all Items available
+
+- `GET /items`
+
+#### Example `curl` command:
+```bash
+curl -X GET http://localhost:8080/items \
+  -b "player=EvilSoul"
+```
+
+#### Request
+
+Must Contain player name
+
+#### Response
+
+Empty Body
+
+#### Status codes
+
+- `200` (OK) - items retrieve
+- `404` (NOT FOUND) - player name not found
