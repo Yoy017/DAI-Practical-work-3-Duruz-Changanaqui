@@ -20,6 +20,7 @@ public class HomeController {
         this.homeRepository = new HomeRepository(databaseProvider);
         app.get(URL, ctx -> getAllPlayers(ctx));
         app.post("/delete-player", this::deletePlayer);
+        app.delete("/delete-player/{name}", this::deletePlayer);
     }
 
     // Afficher tous les joueurs
@@ -35,6 +36,9 @@ public class HomeController {
     public void deletePlayer(Context ctx) {
         // Récupérer le nom du joueur à supprimer à partir des paramètres de la requête POST
         String playerName = ctx.formParam("playerName");
+        if(playerName == null || playerName.isEmpty()) {
+            playerName = ctx.pathParam("name");
+        }
 
         if (playerName == null || playerName.isEmpty()) {// Vérifier que le nom du joueur est présent
             ctx.status(400).result("Player name is required.");

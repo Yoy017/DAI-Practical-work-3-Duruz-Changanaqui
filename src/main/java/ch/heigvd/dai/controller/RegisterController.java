@@ -3,6 +3,7 @@ package ch.heigvd.dai.controller;
 import ch.heigvd.dai.database.PostgresDatabaseConnection;
 import ch.heigvd.dai.model.entity.Player;
 import io.javalin.Javalin;
+import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 
 import java.sql.*;
@@ -19,6 +20,8 @@ public class RegisterController {
         this.databaseProvider = databaseProvider;
         app.get("/register", this::getAvailableClasses);
         app.post("/register", this::registerNewCharacter);
+
+        app.post("/register/{name}/{profession}", this::registerNewCharacter);
     }
 
     public void getAvailableClasses(Context ctx) {
@@ -45,7 +48,14 @@ public class RegisterController {
 
     public void registerNewCharacter(Context ctx) {
         String name = ctx.formParam("name");
+        if (name == null) {
+            name = ctx.pathParam("name");
+        }
+
         String profession = ctx.formParam("profession");
+        if (profession == null) {
+            profession = ctx.pathParam("profession");
+        }
 
         if (name == null || profession == null || name.isEmpty() || profession.isEmpty()) {
             ctx.render("register.jte", Map.of("classes", getEnumValues("class"),
