@@ -23,10 +23,15 @@ public class QuestController {
         // Configure routes
         app.get("/quest", this::renderQuestPage);
         app.post("/quest/accept", this::acceptQuest);
+        app.patch("/quest/accept/{playerName}/{questName}", this::acceptQuest);
 
         app.post("/quest/abandon", this::abandonQuest); // Utilisation de DELETE ici
+
         app.post("/quest/complete", this::completeQuest);
+        app.patch("/quest/complete/{playerName}/{questName}", this::completeQuest);
+
         app.post("/quest/delete", this::deleteCompletedQuest);
+        app.delete("/quest/{playerName}/{questName}", this::deleteCompletedQuest);
     }
 
     /**
@@ -56,11 +61,20 @@ public class QuestController {
      */
     private void acceptQuest(Context ctx) {
         String playerName = ctx.cookie("player");
+        if(playerName == null || playerName.isEmpty()) {
+            playerName = ctx.pathParam("playerName");
+        }
+
         if (playerName == null) {
             ctx.redirect("/home");
             return;
         }
+
         String questName = ctx.formParam("questName");
+        if(questName == null || questName.isEmpty()){
+            questName = ctx.pathParam("questName");
+        }
+
         if (questName == null || questName.isEmpty()) {
             ctx.status(400).result("Quest name is required.");
             return;
@@ -199,12 +213,20 @@ public class QuestController {
     // Route pour abandonner une quête
     public void abandonQuest(Context ctx) {
         String playerName = ctx.cookie("player");
+        if(playerName == null || playerName.isEmpty()) {
+            playerName = ctx.pathParam("playerName");
+        }
+
         if (playerName == null) {
             ctx.redirect("/home");
             return;
         }
 
         String questName = ctx.formParam("questName");
+        if(questName == null || questName.isEmpty()){
+            questName = ctx.pathParam("questName");
+        }
+
         if (questName == null || questName.isEmpty()) {
             ctx.status(400).result("Quest name is required.");
             return;
@@ -227,12 +249,20 @@ public class QuestController {
     // Terminer une quête
     private void completeQuest(Context ctx) {
         String playerName = ctx.cookie("player");
+        if(playerName == null || playerName.isEmpty()) {
+            playerName = ctx.pathParam("playerName");
+        }
+
         if (playerName == null) {
             ctx.redirect("/home");
             return;
         }
 
         String questName = ctx.formParam("questName");
+        if(questName == null || questName.isEmpty()){
+            questName = ctx.pathParam("questName");
+        }
+
         if (questName == null || questName.isEmpty()) {
             ctx.status(400).result("Quest name is required.");
             return;
@@ -275,12 +305,20 @@ public class QuestController {
     // Méthode pour supprimer une quête complétée
     private void deleteCompletedQuest(Context ctx) {
         String playerName = ctx.cookie("player");
+        if(playerName == null || playerName.isEmpty()) {
+            playerName = ctx.pathParam("playerName");
+        }
+
         if (playerName == null) {
             ctx.redirect("/home");
             return;
         }
 
         String questName = ctx.formParam("questName");
+        if(questName == null || questName.isEmpty()){
+            questName = ctx.pathParam("questName");
+        }
+
         if (questName == null || questName.isEmpty()) {
             ctx.status(400).result("Quest name is required.");
             return;
