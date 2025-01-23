@@ -1,10 +1,7 @@
-version: '3.8'
-
 networks:
   bdr-net:
     driver: bridge
   web:
-    external: true
 
 services:
   traefik:
@@ -53,10 +50,10 @@ services:
       timeout: 10s
       retries: 10
     volumes:
-      - ./BDR/scripts/create_database.sql:/docker-entrypoint-initdb.d/01_create_database.sql
-      - ./BDR/scripts/Trigger.sql:/docker-entrypoint-initdb.d/02_Trigger.sql
-      - ./BDR/scripts/View.sql:/docker-entrypoint-initdb.d/03_View.sql
-      - ./BDR/scripts/insert.sql:/docker-entrypoint-initdb.d/04_insert.sql
+      - ./scripts/create_database.sql:/docker-entrypoint-initdb.d/01_create_database.sql
+      - ./scripts/Trigger.sql:/docker-entrypoint-initdb.d/02_Trigger.sql
+      - ./scripts/View.sql:/docker-entrypoint-initdb.d/03_View.sql
+      - ./scripts/insert.sql:/docker-entrypoint-initdb.d/04_insert.sql
     networks:
       - bdr-net
 
