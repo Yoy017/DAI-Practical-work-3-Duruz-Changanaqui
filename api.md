@@ -15,134 +15,96 @@ Characters can also access their profile to validate their information using a s
 
 ## Endpoints
 
-### Create a new character
+### Get characters
 
-- `POST /register`
-
-Create a new character.
-
-#### Request
-
-The request body must contain a JSON object with the following properties:
-
-- `name` - The name of the character
-- `profession` - The profession of the character
-
-#### Response
-
-The response body contains a JSON object with the following properties:
-
-- `id` - The unique identifier of the character
-- `name` - The name of the character
-- `profession` - The profession of the character
-
-#### Status codes
-
-- `201` (Created) - The character has been successfully created
-- `400` (Bad Request) - The request body is invalid
-- `409` (Conflict) - The character already exists
-
-### Get many characters
-
-- `GET /characters`
+- `GET /home`
 
 Get many characters.
 
-#### Request
-
-The request can contain the following query parameters:
-
-- `name` - The name of the character
-- `profession` - The profession of the character
-
+```bash
+  curl -X GET http://localhost:8080/home
+```
 #### Response
+The response contains an HTML page displaying the list of players.
 
-The response body contains a JSON array with the following properties:
+#### Status Codes
+- `200` (OK) - The list of players was successfully retrieved.
+- `500` (Internal Server Error) - An error occurred while retrieving the players.
 
-- `id` - The unique identifier of the character
-- `name` - The name of the character
-- `profession` - The profession of the character
+### Delete a player using POST
 
-#### Status codes
+- **Endpoint**: `POST /delete-player`  
+  Delete a player by sending their name in the form data.
 
-- `200` (OK) - The characters have been successfully retrieved
+#### Example `curl` command:
 
-### Get one character
+```bash
+curl -X POST http://localhost:8080/delete-player \
+     -d "playerName=PlayerName"
+```
+#### Parameters
+playerName (required) - The name of the player to delete.
+Response
+A plain text message indicating the result of the operation.
 
-- `GET /characters/{id}`
+#### Status Codes
+- `200` (OK) - The player was successfully deleted.
+- `400` (Bad Request) - The playerName parameter is missing or empty.
+- `404` (Not Found) - The specified player does not exist.
+- `500` (Internal Server Error) - An error occurred while deleting the player.
 
-Get one character by its ID.
+### Delete a player using DELETE
 
-#### Request
+- **Endpoint**: `DELETE /delete-player/{name}`  
+  Delete a player by specifying their name in the request path.
 
-The request path must contain the ID of the character.
+#### Example `curl` command:
 
-#### Response
+```bash
+curl -X DELETE http://localhost:8080/delete-player/PlayerName
+```
 
-The response body contains a JSON object with the following properties:
+#### Parameters
+{name} (required) - The name of the player to delete, included in the URL.
+Response
+A plain text message indicating the result of the operation.
 
-- `id` - The unique identifier of the character
-- `name` - The name of the character
-- `profession` - The profession of the character
+#### Status Codes
+- `200` (OK) - The player was successfully deleted.
+- `400` (Bad Request) - The name parameter is missing or empty.
+- `404` (Not Found) - The specified player does not exist.
+- `500` (Internal Server Error) - An error occurred while deleting the player.
 
-#### Status codes
+### Get available classes
 
-- `200` (OK) - The character has been successfully retrieved
-- `404` (Not Found) - The character does not exist
+- `GET /register`
 
-### Update a character
-
-- `PUT /characters/{id}`
-
-Update a character by its ID.
-
-#### Request
-
-The request path must contain the ID of the character.
-
-The request body must contain a JSON object with the following properties:
-
-- `name` - The name of the character
-- `profession` - The profession of the character
-
-#### Response
-
-The response body contains a JSON object with the following properties:
-
-- `id` - The unique identifier of the character
-- `name` - The name of the character
-- `profession` - The profession of the character
-
-#### Status codes
-
-- `200` (OK) - The character has been successfully updated
-- `400` (Bad Request) - The request body is invalid
-- `404` (Not Found) - The character does not exist
-
-### Delete a character
-
-- `DELETE /characters/{id}`
-
-Delete a character by its ID.
+#### Example `curl` command:
+```bash
+curl -X GET http://localhost:8080/register
+```
 
 #### Request
 
-The request path must contain the ID of the character.
+Empty
 
 #### Response
 
-The response body is empty.
+Display all classes available
 
 #### Status codes
 
-- `204` (No Content) - The character has been successfully deleted
-- `404` (Not Found) - The character does not exist
+- `200` (No Content) - OK
 
-### Profile
+### Register new Character
 
-- `GET /profile`
+- `POST /register`
 
-Get the current character (the character that is logged in).
+#### Example `curl` command:
+```bash
+curl -X GET http://localhost:8080/register \
+    -d "name=Name"
+```
 
 #### Request
 
