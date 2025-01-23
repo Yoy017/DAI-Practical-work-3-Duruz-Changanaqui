@@ -3,8 +3,39 @@ version: '3.8'
 networks:
   bdr-net:
     driver: bridge
+  web:
+    external: true
 
 services:
+  traefik:
+    image: traefik:v2.9
+    container_name: traefik
+    restart: always
+    command:
+      - "--api=true" # Active l'API de Traefik (Tableau de bord)
+      - "--api.dashboard=true" # Tableau de bord accessible
+      - "--providers.docker=true" # Active les labels Docker
+      - "--entrypoints.web.address=:80" # HTTP
+      - "--entrypoints.websecure.address=:443" # HTTPS
+      - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web" # Challenge HTTP pour TLS
+      - "--certificatesresolvers.myresolver.acme.email=yoann.changanaqui@heig-vd.ch" # Email pour Let’s Encrypt
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json" # Stockage des certificats
+    ports:
+      - "80:80" # HTTP
+      - "443:443" # HTTPS
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro" # Permet à Traefik de lire les services Docker
+      - "./letsencrypt:/letsencrypt" # Stockage des certificats
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      # Dashboard accessible via sous-domaine
+      - "traefik.http.routers.traefik-dashboard.rule=Host(`traefik.mmoproject.duckdns.org`)"
+      - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
+      - "traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver"
+      - "traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080"
+
   database:
     image: postgres:latest
     container_name: mmo_project_db
@@ -40,5 +71,13 @@ services:
       - "8080:8080"
     depends_on:
       - database
+    labels:
+      - "traefik.enable=true"
+      # Application accessible via domaine principal
+      - "traefik.http.routers.mmo_project.rule=Host(`mmoproject.duckdns.org`)"
+      - "traefik.http.routers.mmo_project.entrypoints=websecure"
+      - "traefik.http.routers.mmo_project.tls.certresolver=myresolver"
+      - "traefik.http.services.mmo_project.loadbalancer.server.port=8080"
     networks:
       - bdr-net
+      - web
