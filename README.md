@@ -25,7 +25,10 @@ Suivez toutes ces étapes pour avoir notre application fonctionnelle.
 3. Utilisez le fichier **docker-compose.yml** pour démarrer les services de l'application et de la base de données PostgreSQL (depuis la racine du projet).
 
    ```sh
-   docker compose up
+   # Si pas déjà fait, créer le réseau Docker
+   docker network create web
+   
+   docker compose up -d
    ```
    
 Vous pouvez désormais accéder à la page d'accueil de l'application depuis [mmoproject.duckdns.org/](https://mmoproject.duckdns.org/).
@@ -66,6 +69,7 @@ Maintenant l'application tourne ainsi que le serveur PostgreSQL. Vous pouvez dor
 ## Structure des Fichiers
 
 L'application possède la structure suivante en suivant le modèle MVC pour la gestion avec la BDD.
+![img.png](img/img.png)
 
 ### Controller
 
@@ -131,16 +135,25 @@ Votre application est maintenant en cours d'exécution et accessible via l'adres
 
 Configurons notre zone DNS pour accéder à l'application web.
 
-1. Accédez à votre fournisseur DNS (par exemple, Google Domains, AWS Route 53).
-2. Ajoutez un enregistrement **A** pour votre domaine ou sous-domaine pointant vers l'adresse IP publique de votre machine virtuelle.
-3. Vérifiez que votre domaine est correctement configuré en testant avec une commande `ping` ou en utilisant des outils comme [nslookup](https://nslookup.io/).
+1.Rendez-vous sur le site web de [DuckDNS](https://www.duckdns.org/) et identifier vous.
 
-Exemple :
+2.Choisissez un sous-domaine (par exemple, "mmoproject.duckdns.org").
+![img.png](img/duckdns.png)
 
-| Type | Nom              | Adresse                 |
-|------|------------------|-------------------------|
-| A    | www.votredomaine | 123.45.67.89           |
-| A    | votredomaine     | 123.45.67.89           |
+3.Remplacez l'addresse IP qu'on vous a attribué par celle de votre machine virtuelle.
+
+Remplacez "mmoproject.duckdns.org" par votre sous-domaine choisi dans les étiquettes du service Traefik et de l'application.
+Ajoutez une tâche cron ou un script pour mettre régulièrement à jour l'adresse IP en utilisant l'URL "Mettre à jour l'IP" copiée.
+
+Cela permettra à votre application d'être accessible via votre sous-domaine DuckDNS. Assurez-vous de tester le domaine après avoir mis à jour la configuration.
+
+| Type | Nom                    | Adresse                 |
+|------|------------------------|-------------------------|
+| A    | mmoproject.duckdns.org | 20.71.51.140           |
+
+![img_2.png](img/img_2.png)
+
+![img.png](img/allSetup.png)
 
 ## Examples Using CURL
 
@@ -149,7 +162,7 @@ Voici comment interagir avec notre application à l'aide de `curl` :
 ### Vérifiez l'état de l'application
 
 ```sh
-curl -X GET http://votredomaine/api/status
+curl -X GET http://mmoproject.duckdns.org/api/status
 ```
 
 **Réponse attendue :**
@@ -164,7 +177,7 @@ curl -X GET http://votredomaine/api/status
 ### Ajouter un utilisateur
 
 ```sh
-curl -X POST http://votredomaine/api/users -H "Content-Type: application/json" -d '{"username": "test", "email": "test@example.com"}'
+curl -X POST http://mmoproject.duckdns.org/api/users -H "Content-Type: application/json" -d '{"username": "test", "email": "test@example.com"}'
 ```
 
 **Réponse attendue :**
@@ -182,14 +195,14 @@ curl -X POST http://votredomaine/api/users -H "Content-Type: application/json" -
 1. Construisez l'image Docker :
 
    ```sh
-   docker build -t votredomaine/mmo-project:latest .
+   docker build -t mmoproject.duckdns.org/mmo-project:latest .
    ```
 
 2. Publiez l'image sur un registre Docker :
 
    ```sh
-   docker tag votredomaine/mmo-project:latest ghcr.io/votredomaine/mmo-project:latest
-   docker push ghcr.io/votredomaine/mmo-project:latest
+   docker tag mmoproject.duckdns.org/mmo-project:latest ghcr.io/mmoproject.duckdns.org/mmo-project:latest
+   docker push ghcr.io/mmoproject.duckdns.org/mmo-project:latest
    ```
 
 Votre application est maintenant prête à être déployée sur n'importe quel serveur prenant en charge Docker !
