@@ -55,7 +55,8 @@ Vous pouvez désormais accéder à la page d'accueil de l'application depuis [mm
    ```
 
 4. Démarrez l'application.
-
+*Il vous faut changer l'url dans le fichier `src/main/java/ch/heigvd/dai/DatabaseRendering.java` par "localhost" au lieu de database.
+![img.png](img/urlChange.png)
    ```sh
    # Package l'application
    ./mvnw package

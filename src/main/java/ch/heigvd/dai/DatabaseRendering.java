@@ -10,7 +10,7 @@ import io.javalin.rendering.template.JavalinJte;
 
 import java.nio.file.Path;
 
-public class DatabaseRenderingTest {
+public class DatabaseRendering {
     public static void main(String[] args) {
         DirectoryCodeResolver codeResolver = new DirectoryCodeResolver(Path.of("src/main/resources/view/"));
         TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
