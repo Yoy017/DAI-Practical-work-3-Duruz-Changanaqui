@@ -6,6 +6,40 @@
 
 Suivez toutes ces étapes pour avoir notre application fonctionnelle.
 
+### Manual Installation (recommended)
+
+1. Clonez le repository sur [GitHub](https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git).
+
+   ```sh
+   git clone https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git
+   ```
+
+2. Importez la BDD en suivant l'ordre d'exécution des scripts suivant (les scripts se retrouvent dans /BDR/scripts/*.sql) :
+
+   - **create_database.sql** *(éventuellement **delete.sql** si la base de données existe déjà)*
+   - **insert.sql**
+   - **Trigger.sql**
+   - **View.sql**
+
+3. Démarrez le serveur PostgreSQL de bitnami.
+
+   ```sh
+   docker compose -f postgre-sql-server.yml up
+   ```
+
+4. Démarrez l'application.
+   *Il vous faut changer l'url dans le fichier `src/main/java/ch/heigvd/dai/DatabaseRendering.java` par "localhost" au lieu de database.
+   ![img.png](img/urlChange.png)
+   ```sh
+   # Package l'application
+   ./mvnw package
+
+   # Exécute l'application
+   java -jar target/MMO_Project-1.0-SNAPSHOT.jar
+   ```
+
+Maintenant l'application tourne ainsi que le serveur PostgreSQL. Vous pouvez dorénavant accéder à notre application depuis [localhost:8080](http://localhost:8080).
+
 ### Using docker
 
 1. Clonez le repository sur [GitHub](https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git) (pour récupérer les fichiers .sql et vues nécessaires).
@@ -13,7 +47,7 @@ Suivez toutes ces étapes pour avoir notre application fonctionnelle.
    ```sh
    git clone https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git
    ```
-   
+
 *Cette étape permet de récupéré le fichier docker-compose.yml et les scripts sql (le projet n'est pas nécessaire)*
 
 2. Récupérer l'image de l'application.
@@ -24,48 +58,16 @@ Suivez toutes ces étapes pour avoir notre application fonctionnelle.
 
 3. Utilisez le fichier **docker-compose.yml** pour démarrer les services de l'application et de la base de données PostgreSQL (depuis la racine du projet).
 
+Attention à bien configurer votre zone [DNS](#dns-zone-configuration).
+
    ```sh
    # Si pas déjà fait, créer le réseau Docker
    docker network create web
    
    docker compose up -d
    ```
-   
+
 Vous pouvez désormais accéder à la page d'accueil de l'application depuis [mmoproject.duckdns.org/](https://mmoproject.duckdns.org/).
-
-### Manual Installation
-
-1. Clonez le repository sur [GitHub](https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git).
-
-   ```sh
-   git clone https://github.com/Yoy017/DAI-Practical-work-3-Duruz-Changanaqui.git
-   ```
-
-2. Importez la BDD en suivant l'ordre d'exécution des scripts suivant (les scripts se retrouvent dans /BDR/scripts/*.sql) :
-
-    - **create_database.sql** *(éventuellement **delete.sql** si la base de données existe déjà)*
-    - **insert.sql**
-    - **Trigger.sql**
-    - **View.sql**
-
-3. Démarrez le serveur PostgreSQL de bitnami.
-
-   ```sh
-   docker compose -f postgre-sql-server.yml up
-   ```
-
-4. Démarrez l'application.
-*Il vous faut changer l'url dans le fichier `src/main/java/ch/heigvd/dai/DatabaseRendering.java` par "localhost" au lieu de database.
-![img.png](img/urlChange.png)
-   ```sh
-   # Package l'application
-   ./mvnw package
-
-   # Exécute l'application
-   java -jar target/MMO_Project-1.0-SNAPSHOT.jar
-   ```
-
-Maintenant l'application tourne ainsi que le serveur PostgreSQL. Vous pouvez dorénavant accéder à notre application depuis [localhost:8080](http://localhost:8080).
 
 ## Structure des Fichiers
 
@@ -105,15 +107,15 @@ Vous pouvez retrouver la description de notre API dans le fichier [api.md](./api
 Configurons la machine virtuelle pour héberger votre application.
 
 1. Connectez-vous au [portail Azure](https://portal.azure.com/) et créez une nouvelle machine virtuelle avec les configurations suivantes :
-    - **Resource Group** : Créez un nouveau groupe de ressources ou utilisez-en un existant.
-    - **Nom de la Machine Virtuelle** : Choisissez un nom pour votre VM.
-    - **Région** : Sélectionnez une région proche de votre public cible.
-    - **Image** : Ubuntu Server 20.04 LTS.
-    - **Taille** : Standard B1s (ou une autre taille adaptée à vos besoins).
-    - **Type d'Authentification** : Clé SSH publique.
-    - **Nom d'utilisateur** : Définissez un nom d'utilisateur pour la connexion.
-    - **Clé SSH Publique** : Ajoutez votre clé publique pour l'accès sécurisé.
-    - **Règles des Ports Entrants** : Autorisez les ports 22 (SSH) et 8080 (accès à l'application).
+   - **Resource Group** : Créez un nouveau groupe de ressources ou utilisez-en un existant.
+   - **Nom de la Machine Virtuelle** : Choisissez un nom pour votre VM.
+   - **Région** : Sélectionnez une région proche de votre public cible.
+   - **Image** : Ubuntu Server 20.04 LTS.
+   - **Taille** : Standard B1s (ou une autre taille adaptée à vos besoins).
+   - **Type d'Authentification** : Clé SSH publique.
+   - **Nom d'utilisateur** : Définissez un nom d'utilisateur pour la connexion.
+   - **Clé SSH Publique** : Ajoutez votre clé publique pour l'accès sécurisé.
+   - **Règles des Ports Entrants** : Autorisez les ports 22 (SSH) et 8080 (accès à l'application).
 
 2. Une fois la VM créée, connectez-vous à celle-ci via SSH :
 
@@ -136,20 +138,22 @@ Votre application est maintenant en cours d'exécution et accessible via l'adres
 
 Configurons notre zone DNS pour accéder à l'application web.
 
-1.Rendez-vous sur le site web de [DuckDNS](https://www.duckdns.org/) et identifier vous.
+1. Rendez-vous sur le site web de [DuckDNS](https://www.duckdns.org/) et identifier vous.
 
-2.Choisissez un sous-domaine (par exemple, "mmoproject.duckdns.org").
+2. Choisissez un sous-domaine (par exemple, "mmoproject").
 ![img.png](img/duckdns.png)
 
-3.Remplacez l'addresse IP qu'on vous a attribué par celle de votre machine virtuelle.
+3. Remplacez l'addresse IPV4 qu'on vous a attribué par celle de votre machine qui lancera l'application.
 
-Remplacez "mmoproject.duckdns.org" par votre sous-domaine choisi dans les étiquettes du service Traefik et de l'application.
-Ajoutez une tâche cron ou un script pour mettre régulièrement à jour l'adresse IP en utilisant l'URL "Mettre à jour l'IP" copiée.
+4. Remplacez "mmoproject" par votre nom de sous-domaine choisi dans le docker-compose.yml du projet.
+![img.png](img/sous-domaine.png)
+![img.png](img/sous-domaine2.png)
 
 Cela permettra à votre application d'être accessible via votre sous-domaine DuckDNS. Assurez-vous de tester le domaine après avoir mis à jour la configuration.
 
 | Type | Nom                    | Adresse                 |
 |------|------------------------|-------------------------|
+| A    | <votre-sous-domaine>.duckdns.org | <ip-public-de-votre-machine>
 | A    | mmoproject.duckdns.org | 20.71.51.140           |
 
 ![img_2.png](img/img_2.png)
@@ -170,8 +174,8 @@ curl -X GET http://mmoproject.duckdns.org/api/status
 
 ```json
 {
-  "status": "ok",
-  "message": "Application is running"
+   "status": "ok",
+   "message": "Application is running"
 }
 ```
 
@@ -185,9 +189,9 @@ curl -X POST http://mmoproject.duckdns.org/api/users -H "Content-Type: applicati
 
 ```json
 {
-  "id": 1,
-  "username": "test",
-  "email": "test@example.com"
+   "id": 1,
+   "username": "test",
+   "email": "test@example.com"
 }
 ```
 
