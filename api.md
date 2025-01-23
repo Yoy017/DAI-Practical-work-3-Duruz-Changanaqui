@@ -15,194 +15,139 @@ Characters can also access their profile to validate their information using a s
 
 ## Endpoints
 
-### Create a new character
+### Get characters
 
-- `POST /register`
-
-Create a new character.
-
-#### Request
-
-The request body must contain a JSON object with the following properties:
-
-- `name` - The name of the character
-- `profession` - The profession of the character
-
-#### Response
-
-The response body contains a JSON object with the following properties:
-
-- `id` - The unique identifier of the character
-- `name` - The name of the character
-- `profession` - The profession of the character
-
-#### Status codes
-
-- `201` (Created) - The character has been successfully created
-- `400` (Bad Request) - The request body is invalid
-- `409` (Conflict) - The character already exists
-
-### Get many characters
-
-- `GET /characters`
+- `GET /home`
 
 Get many characters.
 
+```bash
+  curl -X GET http://localhost:8080/home
+```
+#### Response
+The response contains an HTML page displaying the list of players.
+
+#### Status Codes
+- `200` (OK) - The list of players was successfully retrieved.
+- `500` (Internal Server Error) - An error occurred while retrieving the players.
+
+### Delete a player using POST
+
+- **Endpoint**: `POST /delete-player`  
+  Delete a player by sending their name in the form data.
+
+#### Example `curl` command:
+
+```bash
+curl -X POST http://localhost:8080/delete-player \
+     -d "playerName=PlayerName"
+```
+#### Parameters
+playerName (required) - The name of the player to delete.
+Response
+A plain text message indicating the result of the operation.
+
+#### Status Codes
+- `200` (OK) - The player was successfully deleted.
+- `400` (Bad Request) - The playerName parameter is missing or empty.
+- `404` (Not Found) - The specified player does not exist.
+- `500` (Internal Server Error) - An error occurred while deleting the player.
+
+### Delete a player using DELETE
+
+- **Endpoint**: `DELETE /delete-player/{name}`  
+  Delete a player by specifying their name in the request path.
+
+#### Example `curl` command:
+
+```bash
+curl -X DELETE http://localhost:8080/delete-player/PlayerName
+```
+
+#### Parameters
+{name} (required) - The name of the player to delete, included in the URL.
+Response
+A plain text message indicating the result of the operation.
+
+#### Status Codes
+- `200` (OK) - The player was successfully deleted.
+- `400` (Bad Request) - The name parameter is missing or empty.
+- `404` (Not Found) - The specified player does not exist.
+- `500` (Internal Server Error) - An error occurred while deleting the player.
+
+### Get available classes
+
+- `GET /register`
+
+#### Example `curl` command:
+```bash
+curl -X GET http://localhost:8080/register
+```
+
 #### Request
 
-The request can contain the following query parameters:
-
-- `name` - The name of the character
-- `profession` - The profession of the character
+Empty
 
 #### Response
 
-The response body contains a JSON array with the following properties:
-
-- `id` - The unique identifier of the character
-- `name` - The name of the character
-- `profession` - The profession of the character
+Display all classes available
 
 #### Status codes
 
-- `200` (OK) - The characters have been successfully retrieved
+- `200` (No Content) - OK
 
-### Get one character
+### Register new Character
 
-- `GET /characters/{id}`
+- `POST /register`
 
-Get one character by its ID.
+#### Example `curl` command:
+```bash
+curl -X GET http://localhost:8080/register \
+    -d '{"name":"NomDuJoueur","profession":"ProfessionDuJoueur"}'
+```
 
 #### Request
 
-The request path must contain the ID of the character.
-
-#### Response
-
-The response body contains a JSON object with the following properties:
-
-- `id` - The unique identifier of the character
-- `name` - The name of the character
-- `profession` - The profession of the character
+- `name` - Name of the player
+- `profession` - Class of the player
 
 #### Status codes
 
-- `200` (OK) - The character has been successfully retrieved
-- `404` (Not Found) - The character does not exist
+- `200` (OK) - The character has been successfully created
+- `400` (Bad Request) - Character name already exist
 
-### Update a character
+### Register new Character
 
-- `PUT /characters/{id}`
+- `POST /register/{name}/{profession}`
 
-Update a character by its ID.
+#### Example `curl` command:
+```bash
+curl -v -X POST http://localhost:8080/register/MyName/Guerrier
+```
 
 #### Request
 
-The request path must contain the ID of the character.
-
-The request body must contain a JSON object with the following properties:
-
-- `name` - The name of the character
-- `profession` - The profession of the character
-
-#### Response
-
-The response body contains a JSON object with the following properties:
-
-- `id` - The unique identifier of the character
-- `name` - The name of the character
-- `profession` - The profession of the character
+- `name` - Name of the player
+- `profession` - Class of the player
 
 #### Status codes
 
-- `200` (OK) - The character has been successfully updated
-- `400` (Bad Request) - The request body is invalid
-- `404` (Not Found) - The character does not exist
+- `200` (OK) - The character has been successfully created
+- `400` (Bad Request) - Character name already exist
 
-### Delete a character
+### Accept Quest
 
-- `DELETE /characters/{id}`
+- `PATCH /quest/accept/{playerName}/{questName}`
 
-Delete a character by its ID.
-
-#### Request
-
-The request path must contain the ID of the character.
-
-#### Response
-
-The response body is empty.
-
-#### Status codes
-
-- `204` (No Content) - The character has been successfully deleted
-- `404` (Not Found) - The character does not exist
-
-### Profile
-
-- `GET /profile`
-
-Get the current character (the character that is logged in).
+#### Example `curl` command:
+```bash
+curl -v -X PATCH http://localhost:8080/quest/accept/EvilSoul/Friend%20of%20zanahorias
+```
 
 #### Request
 
-The request body is empty.
-
-#### Response
-
-The response body contains a JSON object with the following properties:
-
-- `id` - The unique identifier of the character
-- `name` - The name of the character
-- `profession` - The profession of the character
-
-#### Status codes
-
-- `200` (OK) - The character has been successfully retrieved
-- `401` (Unauthorized) - The character is not logged in
-
-### Get character inventory
-
-- `GET /characters/{id}/inventory`
-
-Get the inventory of a character by its ID.
-
-#### Request
-
-The request path must contain the ID of the character.
-
-#### Response
-
-The response body contains a JSON object with the following properties:
-
-- `slots` - A list of slots in the inventory, each containing:
-    - `type` - The type of the slot (e.g., "Bag", "Equipment")
-    - `item` - The item in the slot, with the following properties:
-        - `id` - The unique identifier of the item
-        - `name` - The name of the item
-        - `description` - The description of the item
-        - `type` - The type of the item
-        - `rarity` - The rarity of the item
-        - `requiredLevel` - The required level to use the item
-
-#### Status codes
-
-- `200` (OK) - The inventory has been successfully retrieved
-- `404` (Not Found) - The character does not exist
-
-### Add item to inventory
-
-- `POST /characters/{id}/inventory`
-
-Add an item to the inventory of a character by its ID.
-
-#### Request
-
-The request path must contain the ID of the character.
-
-The request body must contain a JSON object with the following properties:
-
-- `itemId` - The ID of the item to add
+The request path must contain the name of the character.
+The request path must contain the name of the quest.
 
 #### Response
 
@@ -210,23 +155,22 @@ The response body is empty.
 
 #### Status codes
 
-- `204` (No Content) - The item has been successfully added to the inventory
-- `400` (Bad Request) - The request body is invalid
-- `404` (Not Found) - The character or item does not exist
+- `200` (OK) - The quest has been accepted
+- `404` (Not Found) - The character or quest does not exist
 
-### Equip item
+### Complete Quest
 
-- `PUT /characters/{id}/inventory/equip`
+- `PATCH /quest/complete/{playerName}/{questName}`
 
-Equip an item from the inventory of a character by its ID.
+#### Example `curl` command:
+```bash
+curl -v -X PATCH http://localhost:8080/quest/complete/EvilSoul/Friend%20of%20zanahorias
+```
 
 #### Request
 
-The request path must contain the ID of the character.
-
-The request body must contain a JSON object with the following properties:
-
-- `itemId` - The ID of the item to equip
+The request path must contain the name of the character.
+The request path must contain the name of the quest.
 
 #### Response
 
@@ -234,23 +178,21 @@ The response body is empty.
 
 #### Status codes
 
-- `204` (No Content) - The item has been successfully equipped
-- `400` (Bad Request) - The request body is invalid
-- `404` (Not Found) - The character or item does not exist
+- `200` (OK) - Quest completed
+- `404` (Not Found) - The character or Quest does not exist
 
-### Unequip item
+### Delete Quest From Journal
 
-- `PUT /characters/{id}/inventory/unequip`
+- `DELETE /quest/{playerName}/{questName}`
 
-Unequip an item from the inventory of a character by its ID.
-
+#### Example `curl` command:
+```bash
+curl -v -X DELETE http://localhost:8080/quest/EvilSoul/Friend%20of%20zanahorias
+```
 #### Request
 
-The request path must contain the ID of the character.
-
-The request body must contain a JSON object with the following properties:
-
-- `itemId` - The ID of the item to unequip
+The request path must contain the name of the character.
+The request path must contain the name of the quest.
 
 #### Response
 
@@ -258,30 +200,112 @@ The response body is empty.
 
 #### Status codes
 
-- `204` (No Content) - The item has been successfully unequipped
-- `400` (Bad Request) - The request body is invalid
-- `404` (Not Found) - The character or item does not exist
+- `200` (OK) - The quest has been successfully deleted
+- `404` (Not Found) - The character or quest does not exist
 
-### Delete item from inventory
+### Get Player Inventory
 
-- `DELETE /characters/{id}/inventory`
+- `GET /armory`
 
-Delete an item from the inventory of a character by its ID.
+#### Example `curl` command:
+```bash
+curl -X GET "http://localhost:8080/URL?player=EvilSoul"
+```
 
 #### Request
 
-The request path must contain the ID of the character.
-
-The request body must contain a JSON object with the following properties:
-
-- `itemId` - The ID of the item to delete
+The request path must contain the name of the character.
 
 #### Response
 
-The response body is empty.
+HTML of the player's equipements
 
 #### Status codes
 
-- `204` (No Content) - The item has been successfully deleted from the inventory
-- `400` (Bad Request) - The request body is invalid
-- `404` (Not Found) - The character or item does not exist
+- `200` (OK) - Player items retrieve
+
+### Player equipement Management
+
+- `POST /armory`
+
+#### Example `curl` command:
+Delete
+```bash
+curl -X POST http://localhost:8080/armory \
+  -d "_method=delete" \
+  -d "itemName=ItemToRemove"
+```
+Equip
+```bash
+curl -X POST http://localhost:8080/armory \
+  -d "_method=equip" \
+  -d "itemName=ItemToEquip"
+```
+
+Unequip
+```bash
+curl -X POST http://localhost:8080/armory \
+  -d "_method=unequip" \
+  -d "itemName=ItemToUnequip"
+```
+
+#### Request
+
+Must contain the name of the method to use.
+Must contain the name of the item to manipulate.
+
+#### Response
+
+HTML of the player's equipements
+
+#### Status codes
+
+- `200` (OK) - Player items retrieve
+- `404` (NOT FOUND) - method or item not found
+
+### Add Item To Player Inventory
+
+- `POST /items`
+
+#### Example `curl` command:
+```bash
+curl -X POST http://localhost:8080/items \
+  -b "player=EvilSoul" \
+  -d "itemId=123"
+```
+
+#### Request
+
+Must Contain player name and item Id
+
+#### Response
+
+Empty Body
+
+#### Status codes
+
+- `200` (OK) - Player items retrieve
+- `404` (NOT FOUND) - player name or item id not found
+
+### Get all Items available
+
+- `GET /items`
+
+#### Example `curl` command:
+```bash
+curl -X GET http://localhost:8080/items \
+  -b "player=EvilSoul"
+```
+
+#### Request
+
+Must Contain player name
+
+#### Response
+
+Empty Body
+
+#### Status codes
+
+- `200` (OK) - items retrieve
+- `404` (NOT FOUND) - player name not found
