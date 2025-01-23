@@ -42,3 +42,6 @@ Thumbs.db
 
 # Folder config file
 [Dd]esktop.ini
+
+# Zone identifier
+*.Zone.Identifier
